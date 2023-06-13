@@ -1,0 +1,15 @@
+{
+  "name": "muon-wallet",
+  "version": "0.1.0",
+  "description": "muon wallet test project",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": ""
+  },
+  "author": "Muon.net",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.7.0",
+    "web3": "^4.0.1"
+  }
+}
