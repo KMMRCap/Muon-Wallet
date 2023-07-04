@@ -1,0 +1,13 @@
+@import url(./global/fonts.css);
+@import url(./global/animations.css);
+@import url(./global/variables.css);
+@import url(./global/general.css);
+
+@import url(./modal/layout.css);
+@import url(./modal/account.css);
+@import url(./modal/actions.css);
+@import url(./modal/signSection.css);
+@import url(./modal/outOfWalletBalanceSection.css);
+@import url(./modal/outOfDepositBalanceSection.css);
+@import url(./modal/buyDepositSection.css);
+@import url(./modal/loading.css);

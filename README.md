@@ -13,36 +13,56 @@ Include the styles file in your project
 For React applications :
 
 ```bash
-import 'muon-wallet/src/index.css'
+import 'muon-wallet/src/css/index.css'
 ```
+
+## Getting Started
 
 ## Importing
 
-Now you can import the following options
+Now you can import the "request" function
 
-// Using Node.js `require()`
+### Using Node.js `require()`
 ```bash
-const { checkConnect, requestConnect, accounts, web3 } = require('muon-wallet')
+const { request } = require('muon-wallet')
 ```
 
-// Using ES6 imports
+### Using ES6 imports
 ```bash
-import { checkConnect, requestConnect, accounts, web3 } from 'muon-wallet'
+import { request } from 'muon-wallet'
 ```
 
-## Options
+## Parameters
 
-1. requestConnect()
-Request connection to MetaMask wallet.
-if the connection is successfull , the Muon Wallet Modal opens and shows your account address.
-After that, you can access to accounts and web3 instances.
+1. appName : 
+This parameter must be the name of one of apps that exist in the [Muon Explorer](https://explorer.muon.net) apps list and it should be string.  
 
-2. checkConnect()
-Checks if the wallet is connected and opens the Muon Wallet Modal.
-It also create accounts and web3 instances if they are not.
+2. methodName :
+This parameter must be the name of one of method of the app that is entered as the first parameter.
 
-3. accounts
-Returns the addresses of your accounts only if the wallet is connected
+3. params :
+This parameter must be the params of the method that is entered as the second parameter and it should be an object.
 
-4. web3
-Returns the instance of web3 from web3.js package only if the wallet is connected
+## Examples
+
+This function returns a promise that should be handled correctly.
+
+```bash
+request(app,method,params)
+    .then(res => {
+        console.log(res)
+    })
+    .catch(err => {
+        console.error(err)
+    })
+```
+
+```bash
+try{
+    const res = await request(app,method,params)
+    console.log(res)
+}
+catch(err){
+    console.error(err)
+}
+```

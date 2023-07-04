@@ -1,7 +1,7 @@
 {
   "name": "muon-wallet",
-  "version": "0.1.0",
-  "description": "muon wallet test project",
+  "version": "1.0.0",
+  "description": "Muon wallet package",
   "main": "./src/index.js",
   "scripts": {
     "test": ""
@@ -9,7 +9,18 @@
   "author": "Muon.net",
   "license": "ISC",
   "dependencies": {
+    "@metamask/detect-provider": "^2.0.0",
     "jquery": "^3.7.0",
     "web3": "^4.0.1"
-  }
+  },
+  "keywords": [
+    "muon",
+    "muon-wallet",
+    "javascript",
+    "web3",
+    "ethereum",
+    "front-end"
+  ],
+  "homepage": "https://muon.net",
+  "repository": "https://github.com/KMMRCap/Muon-Wallet"
 }
