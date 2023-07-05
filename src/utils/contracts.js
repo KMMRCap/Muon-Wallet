@@ -1,4 +1,4 @@
-export const Contracts = {
+const Contracts = {
     address: {
         // MuonFeeUpgradeable: "0xa3d76dd3C0A7550f31FbFb7Ae4dB3826eD7e573E",
         MuonFeeUpgradeable: "0x31249D6c96b4B858a47bece989FBB83E2704A639",
@@ -13,6 +13,8 @@ export const Contracts = {
         Pair: require("./abi/Pair.json"),
     },
 };
+
+module.exports = { Contracts }
 
 // Used Methods :
 
