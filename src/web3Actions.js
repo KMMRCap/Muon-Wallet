@@ -110,7 +110,7 @@ const getSelectedTokenBalance = async (web3, account, address) => {
 /**
  * @param {Web3} web3 The Web3.js instance
  * @param {object} token The selected token object
- * @returns {Promise<number>} Returns exchange rate for selected token and destination token (MUON/ALICE/PION)
+ * @returns {Promise<object>} Returns rates for selected token and destination token (MUON/ALICE/PION)
  */
 
 const getPairExchangeRates = async (web3, token) => {
@@ -123,8 +123,7 @@ const getPairExchangeRates = async (web3, token) => {
         .call()
     const rate1 = utils.fromWei(res._reserve0, 'ether')
     const rate2 = utils.fromWei(res._reserve1, 'ether')
-    const exchangeRate = token.reversed ? rate1 / rate2 : rate2 / rate1
-    return exchangeRate
+    return { rate1, rate2 }
 }
 
 

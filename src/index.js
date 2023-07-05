@@ -6,7 +6,7 @@ const {
     getWalletMuonBalance, getDepositedMuonBalance, getSelectedTokenBalance,
     getPairExchangeRates, buyMuon, checkAllowance, approveDeposit, depositMuon, approve,
 } = require('./web3Actions')
-const { priceHandler } = require('./utils/price')
+const { priceHandler, exchageRateCalculator } = require('./utils/price')
 
 const Tokens = require('./utils/Tokens.json')
 const Apps = require('./utils/Apps.json')
@@ -40,7 +40,8 @@ let convertedFee = 0.1
 
 let selectedToken = null
 let selectedTokenBalance = 0
-let exchangeRate = 0
+let rate1 = 0
+let rate2 = 0
 let swapInputValue = 0
 // let allowBuyAndDeposit = false
 
@@ -405,8 +406,11 @@ const buySectionHandler = () => {
             $(inputbox).css('border', 'none')
             handleDisableButton(button, false)
         }
-        exchangeRate = await getPairExchangeRates(web3Instance, selectedToken)
-        const convertedValue = swapInputValue * exchangeRate
+        const res = await getPairExchangeRates(web3Instance, selectedToken)
+        rate1 = Number(selectedToken.reversed ? res.rate2 : res.rate1)
+        rate2 = Number(selectedToken.reversed ? res.rate1 : res.rate2)
+
+        const convertedValue = exchageRateCalculator(swapInputValue, rate1, rate2)
         const resultSpan = $('#muon-wallet .modal-body .swap-actions .to .converted')
         $(resultSpan).text(priceHandler(convertedValue))
         handleLoadingButton(button, false)
@@ -436,7 +440,7 @@ const buySectionHandler = () => {
     // })
 
     $(button).on('click', async () => {
-        if (!selectedToken?.name || !swapInputValue || !exchangeRate) {
+        if (!selectedToken?.name || !swapInputValue || !rate1 || !rate2) {
             console.error('Value to buy is not specified');
             return
         }
