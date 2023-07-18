@@ -140,7 +140,7 @@ const buyMuon = async (web3, valueToPay, account, address) => {
         Contracts.abi.SmartRouter,
         Contracts.address.SmartRouter
     )
-    const amountIn = valueToPay * (10 ** 18)
+    const amountIn = utils.toWei(valueToPay, 'ether')
     const amountOutMin = 0
     const path = ['0xae13d989dac2f0debff460ac112a837c89baa7cd', '0x84102df4b6bcb72114532241894b2077428a7f86']
     const res = await contract.methods
@@ -183,7 +183,7 @@ const approveDeposit = async (web3, amount, account) => {
         Contracts.address.Token
     )
     const spender = Contracts.address.MuonFeeUpgradeable
-    const convertedAmount = amount * (10 ** 18)
+    const convertedAmount = utils.toWei(amount, 'ether')
     const res = await contract.methods
         .approve(spender, convertedAmount)
         .send({ from: account })
@@ -228,7 +228,7 @@ const approve = async (web3, account, app, method, params) => {
         { type: "uint64", value: timestamp },
         { type: "uint256", value: appId }
     )
-    const res = await web3.eth.personal.sign(hash, account, 'Test Password')
+    const signature = await web3.eth.personal.sign(hash, account, 'Test Password')
 
     const paramsObject = JSON.parse(params)
     let paramsToConcat = ''
@@ -236,9 +236,10 @@ const approve = async (web3, account, app, method, params) => {
         paramsToConcat = paramsToConcat.concat(`&params[${item[0]}]=${item[1]}`)
     })
 
-    const url = `http://104.131.177.195:8080/v1/?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${res.signature}`;
+    const url = `http://89.106.206.214:8000/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`;
 
-    const data = await fetch(url, { method: 'GET' })
+    const res = await fetch(url, { method: 'GET' })
+    const data = await res.json()
     return data
 }
 

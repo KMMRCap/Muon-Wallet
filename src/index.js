@@ -72,7 +72,7 @@ const modalLayout = () => {
                 <div class='account'>
                     <div>
                         <p>${accountAddress?.slice(0, 6) + '...' + accountAddress?.slice(-4)}</p>
-                        <span>Wallet balance: ${priceHandler(walletBalance)} ${TOKEN_NAME}</span>
+                        <span>Wallet balance: <span>${priceHandler(walletBalance)}</span> ${TOKEN_NAME}</span>
                     </div>
                     <!-- <div class='dropdown-image'></div> -->
                 </div>
@@ -450,6 +450,7 @@ const buySectionHandler = () => {
 
             const balance = await getWalletMuonBalance(web3Instance, accountAddress)
             walletBalance = Number(balance)
+            $('#muon-wallet .account span span').text(priceHandler(walletBalance))
             handleLoadingButton(button, false)
 
             if (walletBalance) {
@@ -479,10 +480,7 @@ const depositSectionHandler = () => {
 
     $(input).val(depositInputValue)
 
-    const handleCheckAllowance = async () => {
-        const value = await checkAllowance(web3Instance, accountAddress)
-        allowance = Number(value)
-        $(allowanceText).text(allowance)
+    const handleButtonText = () => {
         if (allowance >= depositInputValue && depositInputValue) {
             $(button).text('Deposit')
         }
@@ -491,8 +489,16 @@ const depositSectionHandler = () => {
         }
     }
 
+    const handleCheckAllowance = async () => {
+        const value = await checkAllowance(web3Instance, accountAddress)
+        allowance = Number(value)
+        $(allowanceText).text(allowance)
+        handleButtonText()
+    }
+
     const handleDepositInputValue = (value) => {
         depositInputValue = Number(value)
+        handleButtonText()
         if (!depositInputValue) {
             $(inputbox).css('border', 'none')
             handleDisableButton(button, true)
