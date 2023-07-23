@@ -19,9 +19,3 @@
   color: var(--t3);
   font-size: 12px;
 }
-
-#muon-wallet .account .dropdown-image {
-  background-image: url(../../images/open.png);
-  width: 16px;
-  height: 10px;
-}

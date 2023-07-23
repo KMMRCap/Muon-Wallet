@@ -3,6 +3,10 @@ const { utils, Web3 } = require('web3')
 const { Contracts } = require('./utils/contracts')
 const Apps = require('./utils/Apps.json')
 
+// ==========================================================================
+// REQUIRED CHECKS TO OPEN MODAL
+// ==========================================================================
+
 const checkProvider = (provider) => {
     if (provider !== window.ethereum) {
         throw 'Do you have multiple wallets installed?'
@@ -31,6 +35,11 @@ const checkWalletConnection = () => {
 }
 
 
+// ==========================================================================
+// GENERAL
+// ==========================================================================
+
+
 /**
  * @param {Web3} web3 The Web3.js instance
  * @returns {Promise<string>} Returns account address
@@ -48,7 +57,7 @@ const getSelectedAccount = async (web3) => {
  * @returns {Promise<number>} Returns wallet muon balance
  */
 
-const getWalletMuonBalance = async (web3, account) => {
+const getWalletBalance = async (web3, account) => {
     const contract = new web3.eth.Contract(
         Contracts.abi.Token,
         Contracts.address.Token
@@ -67,7 +76,7 @@ const getWalletMuonBalance = async (web3, account) => {
  * @returns {Promise<number>} Returns deposited muon balance
  */
 
-const getDepositedMuonBalance = async (web3, account) => {
+const getDepositBalance = async (web3, account) => {
     const contract = new web3.eth.Contract(
         Contracts.abi.MuonFeeUpgradeable,
         Contracts.address.MuonFeeUpgradeable
@@ -78,6 +87,10 @@ const getDepositedMuonBalance = async (web3, account) => {
     const balance = utils.fromWei(res, 'ether')
     return balance
 }
+
+// ==========================================================================
+// SWAP TOKENS
+// ==========================================================================
 
 
 /**
@@ -126,28 +139,74 @@ const getPairExchangeRates = async (web3, token) => {
     return { rate1, rate2 }
 }
 
+/**
+ * @param {Web3} web3 The Web3.js instance
+ * @param {string} address The token address to check allowance
+ * @param {string} account The account address string
+ * @returns {Promise<number>} Returns allowance
+ */
+
+const checkSelectedTokenAllowance = async (web3, address, account) => {
+    const contract = new web3.eth.Contract(
+        Contracts.abi.Token,
+        address
+    )
+    const spender = Contracts.address.SmartRouter
+    const res = await contract.methods
+        .allowance(account, spender)
+        .call()
+    const allowance = utils.fromWei(res, 'ether')
+    return allowance
+}
+
+
+/**
+ * @param {Web3} web3 The Web3.js instance
+ * @param {string} address The token address to approve
+ * @param {number} amount The amount to deposit
+ * @param {string} account The account address string
+ * @returns {Promise<any>} Returns deposit response
+ */
+
+const approveSwapTokens = async (web3, address, amount, account) => {
+    const contract = new web3.eth.Contract(
+        Contracts.abi.Token,
+        address
+    )
+    const spender = Contracts.address.SmartRouter
+    const convertedAmount = utils.toWei(amount, 'ether')
+    const res = await contract.methods
+        .approve(spender, convertedAmount)
+        .send({ from: account })
+    return res
+}
+
 
 /**
  * @param {Web3} web3 The Web3.js instance
  * @param {number} valueToPay The amount to swap
  * @param {string} account The account address string
- * @param {string} address Then token contract address string
+ * @param {object} token Then selected token object
  * @returns {Promise<any>} Returns swap response
  */
 
-const buyMuon = async (web3, valueToPay, account, address) => {
+const swapTokens = async (web3, valueToPay, account, token) => {
     const contract = new web3.eth.Contract(
         Contracts.abi.SmartRouter,
         Contracts.address.SmartRouter
     )
     const amountIn = utils.toWei(valueToPay, 'ether')
     const amountOutMin = 0
-    const path = ['0xae13d989dac2f0debff460ac112a837c89baa7cd', '0x84102df4b6bcb72114532241894b2077428a7f86']
+    const path = token.route
     const res = await contract.methods
         .swapExactTokensForTokens(amountIn, amountOutMin, path, account)
-        .send({ from: account, value: address !== '0x0' ? 0 : amountIn })
+        .send({ from: account, value: token.address !== '0x0' ? 0 : amountIn })
     return res
 }
+
+// ==========================================================================
+// DEPOSIT TOKEN
+// ==========================================================================
 
 
 /**
@@ -156,7 +215,7 @@ const buyMuon = async (web3, valueToPay, account, address) => {
  * @returns {Promise<number>} Returns allowance
  */
 
-const checkAllowance = async (web3, account) => {
+const checkDepositAllowance = async (web3, account) => {
     const contract = new web3.eth.Contract(
         Contracts.abi.Token,
         Contracts.address.Token
@@ -177,7 +236,7 @@ const checkAllowance = async (web3, account) => {
  * @returns {Promise<any>} Returns deposit response
  */
 
-const approveDeposit = async (web3, amount, account) => {
+const approveDepositToken = async (web3, amount, account) => {
     const contract = new web3.eth.Contract(
         Contracts.abi.Token,
         Contracts.address.Token
@@ -198,7 +257,7 @@ const approveDeposit = async (web3, amount, account) => {
  * @returns {Promise<any>} Returns deposit response
  */
 
-const depositMuon = async (web3, amount, account) => {
+const depositToken = async (web3, amount, account) => {
     const contract = new web3.eth.Contract(
         Contracts.abi.MuonFeeUpgradeable,
         Contracts.address.MuonFeeUpgradeable
@@ -210,6 +269,10 @@ const depositMuon = async (web3, amount, account) => {
     return res
 }
 
+// ==========================================================================
+// SIGN AND REQUEST
+// ==========================================================================
+
 
 /**
  * @param {Web3} web3 The Web3.js instance
@@ -220,9 +283,8 @@ const depositMuon = async (web3, amount, account) => {
  * @returns {Promise<any>} Returns swap response
  */
 
-const approve = async (web3, account, app, method, params) => {
-    // const timestamp = Math.floor(Date.now() / 1000);
-	const timestamp = Math.floor(Date.now());
+const signAndRequest = async (web3, account, app, method, params) => {
+    const timestamp = Math.floor(Date.now());
     const appId = Apps.find(i => i.name === app).id
     const hash = utils.soliditySha3(
         { type: "address", value: account },
@@ -238,7 +300,6 @@ const approve = async (web3, account, app, method, params) => {
     })
 
     const url = `http://139.59.101.131:8080/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`;
-    // const url = `http://139.59.101.131:8080/v1?app=tss&method=test&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`;
 
     const res = await fetch(url, { method: 'GET' })
     const data = await res.json()
@@ -249,14 +310,19 @@ const approve = async (web3, account, app, method, params) => {
 module.exports = {
     detectProvider,
     checkWalletConnection,
+
     getSelectedAccount,
-    getWalletMuonBalance,
-    getDepositedMuonBalance,
+    getWalletBalance,
+    getDepositBalance,
+
     getSelectedTokenBalance,
     getPairExchangeRates,
-    buyMuon,
-    checkAllowance,
-    approveDeposit,
-    depositMuon,
-    approve,
+    checkSelectedTokenAllowance,
+    approveSwapTokens,
+    swapTokens,
+
+    checkDepositAllowance,
+    approveDepositToken,
+    depositToken,
+    signAndRequest,
 }

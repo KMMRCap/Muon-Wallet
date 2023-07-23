@@ -2,11 +2,13 @@ const $ = require('jquery')
 const { Web3 } = require('web3')
 
 const {
-    detectProvider, checkWalletConnection, getSelectedAccount,
-    getWalletMuonBalance, getDepositedMuonBalance, getSelectedTokenBalance,
-    getPairExchangeRates, buyMuon, checkAllowance, approveDeposit, depositMuon, approve,
+    detectProvider, checkWalletConnection,
+    getSelectedAccount, getWalletBalance, getDepositBalance,
+    getSelectedTokenBalance, checkSelectedTokenAllowance, approveSwapTokens, getPairExchangeRates, swapTokens,
+    checkDepositAllowance, approveDepositToken, depositToken, signAndRequest,
 } = require('./web3Actions')
 const { priceHandler, exchageRateCalculator } = require('./utils/price')
+const { logoHandler } = require('./utils/logo')
 
 const Tokens = require('./utils/Tokens.json')
 const Apps = require('./utils/Apps.json')
@@ -43,6 +45,7 @@ let selectedTokenBalance = 0
 let rate1 = 0
 let rate2 = 0
 let swapInputValue = 0
+let swapAllowance = 0
 // let allowBuyAndDeposit = false
 
 let depositInputValue = 0
@@ -74,7 +77,6 @@ const modalLayout = () => {
                         <p>${accountAddress?.slice(0, 6) + '...' + accountAddress?.slice(-4)}</p>
                         <span>Wallet balance: <span>${priceHandler(walletBalance)}</span> ${TOKEN_NAME}</span>
                     </div>
-                    <!-- <div class='dropdown-image'></div> -->
                 </div>
 
                 <div class="modal-body"></div>
@@ -238,6 +240,9 @@ const buySection = () => {
                         </div>
                     </div>
                 </div>
+                <div class='allowance'>
+                    <h6>Allowance: <span>${swapAllowance(swapAllowance)}</span> <span>${selectedToken?.name || Tokens[1].name}</span></h6>
+                </div>
                 <!-- <div class='checkbox'>
                     <input type="checkbox" name="checkbox" id='check-buy-and-deposit' />
                     <label for='check-buy-and-deposit'>Buy and Deposit to Account</label>
@@ -272,7 +277,7 @@ const depositSection = () => {
                         </div>
                     </div>
                     <div class='allowance'>
-                        <h6>Allowance: <span>${allowance}</span> ${TOKEN_NAME}</h6>
+                        <h6>Allowance: <span>${priceHandler(allowance)}</span> ${TOKEN_NAME}</h6>
                     </div>
                 </div>
                 <button class='deposit'>Approve Deposit</button>
@@ -321,7 +326,7 @@ const signSectionHandler = () => {
     $(button).on('click', async () => {
         try {
             handleLoadingButton(button, true)
-            const data = await approve(web3Instance, accountAddress, app, method, params)
+            const data = await signAndRequest(web3Instance, accountAddress, app, method, params)
             handleLoadingButton(button, false)
             handleCloseModal(data)
         }
@@ -370,7 +375,11 @@ const buySectionHandler = () => {
 
     const selectbox = $('#muon-wallet .modal-body .swap-box .from select')
     const input = $('#muon-wallet .modal-body .swap-box .from input')
+    const logo = $('#muon-wallet .modal-body .swap-box .from .logo')
     const button = $('#muon-wallet .modal-body .swap-actions .buy-and-deposit')
+    const allowanceDiv = $('#muon-wallet .modal-body .swap-actions .allowance')
+    const allowanceValue = $('#muon-wallet .modal-body .swap-actions .allowance h6 span:first-child')
+    const allowanceToken = $('#muon-wallet .modal-body .swap-actions .allowance h6 span:last-child')
     // const checkbox = $('#muon-wallet .modal-body .swap-actions .checkbox input')
 
     Tokens.forEach(i => {
@@ -382,11 +391,44 @@ const buySectionHandler = () => {
     // $(checkbox).val(allowBuyAndDeposit)
     // $(button).text(allowBuyAndDeposit ? 'Buy & Deposit' : 'Buy')
 
+    const handleButtonOnAllowance = (value) => {
+        if (selectedToken.address === '0x0') {
+            $(button).text('Buy')
+        }
+        else {
+            if (value > swapAllowance) {
+                $(button).text('Approve')
+            }
+            else {
+                $(button).text('Buy')
+            }
+        }
+    }
+
+    const handleCheckSwapAllowance = async () => {
+        if (selectedToken.address === '0x0') {
+            $(allowanceDiv).hide()
+        }
+        else {
+            $(allowanceDiv).show()
+            const value = await checkSelectedTokenAllowance(web3Instance, selectedToken.address, accountAddress)
+            swapAllowance = Number(value)
+            $(allowanceValue).text(priceHandler(swapAllowance))
+            $(allowanceToken).text(selectedToken.name)
+        }
+    }
+
     const handleSelectedTokenBalance = async () => {
         handleLoadingButton(button, true)
+
+        logoHandler(selectedToken.icon, logo)
+        await handleCheckSwapAllowance()
+
         const balance = await getSelectedTokenBalance(web3Instance, accountAddress, selectedToken.address)
         selectedTokenBalance = balance
         $('#muon-wallet .modal-body .swap-actions .from h6 span').text(priceHandler(selectedTokenBalance))
+
+        await handleSwapInputValues(swapInputValue)
         handleLoadingButton(button, false)
     }
 
@@ -413,6 +455,8 @@ const buySectionHandler = () => {
         const convertedValue = exchageRateCalculator(swapInputValue, rate1, rate2)
         const resultSpan = $('#muon-wallet .modal-body .swap-actions .to .converted')
         $(resultSpan).text(priceHandler(convertedValue))
+
+        handleButtonOnAllowance(value)
         handleLoadingButton(button, false)
     }
 
@@ -445,19 +489,23 @@ const buySectionHandler = () => {
             return
         }
         try {
-            handleLoadingButton(button, true)
-            await buyMuon(web3Instance, swapInputValue, accountAddress, selectedToken.address)
-
-            const balance = await getWalletMuonBalance(web3Instance, accountAddress)
-            walletBalance = Number(balance)
-            $('#muon-wallet .account span span').text(priceHandler(walletBalance))
-            handleLoadingButton(button, false)
-
-            if (walletBalance) {
-                depositSectionHandler()
+            if (selectedToken.address !== '0x0' && swapInputValue > swapAllowance) {
+                handleLoadingButton(button, true)
+                await approveSwapTokens(web3Instance, selectedToken.address, swapInputValue, accountAddress)
+                await handleCheckSwapAllowance()
+                handleButtonOnAllowance()
+                handleLoadingButton(button, false)
             }
             else {
-                buySectionHandler()
+                handleLoadingButton(button, true)
+                await swapTokens(web3Instance, swapInputValue, accountAddress, selectedToken)
+
+                const balance = await getWalletBalance(web3Instance, accountAddress)
+                walletBalance = Number(balance)
+                $('#muon-wallet .account span span').text(priceHandler(walletBalance))
+                handleLoadingButton(button, false)
+
+                outOfDepositBalanceSectionHandler()
             }
         }
         catch (err) {
@@ -489,8 +537,8 @@ const depositSectionHandler = () => {
         }
     }
 
-    const handleCheckAllowance = async () => {
-        const value = await checkAllowance(web3Instance, accountAddress)
+    const handleCheckDepositAllowance = async () => {
+        const value = await checkDepositAllowance(web3Instance, accountAddress)
         allowance = Number(value)
         $(allowanceText).text(allowance)
         handleButtonText()
@@ -513,7 +561,7 @@ const depositSectionHandler = () => {
         }
     }
 
-    handleCheckAllowance()
+    handleCheckDepositAllowance()
     handleDepositInputValue(depositInputValue)
 
     $(input).on('input', (e) => {
@@ -531,9 +579,9 @@ const depositSectionHandler = () => {
         try {
             if (allowance >= depositInputValue) {
                 handleLoadingButton(button, true)
-                await depositMuon(web3Instance, depositInputValue, accountAddress)
+                await depositToken(web3Instance, depositInputValue, accountAddress)
 
-                const balance = await getDepositedMuonBalance(web3Instance, accountAddress)
+                const balance = await getDepositBalance(web3Instance, accountAddress)
                 depositBalance = Number(balance)
                 handleLoadingButton(button, false)
 
@@ -546,8 +594,8 @@ const depositSectionHandler = () => {
             }
             else {
                 handleLoadingButton(button, true)
-                await approveDeposit(web3Instance, depositInputValue, accountAddress)
-                await handleCheckAllowance()
+                await approveDepositToken(web3Instance, depositInputValue, accountAddress)
+                await handleCheckDepositAllowance()
                 handleLoadingButton(button, false)
             }
         }
@@ -630,8 +678,8 @@ const request = (appName, methodName, parameters) => {
             checkWalletConnection()
 
             accountAddress = await getSelectedAccount(web3Instance)
-            const res1 = getWalletMuonBalance(web3Instance, accountAddress)
-            const res2 = getDepositedMuonBalance(web3Instance, accountAddress)
+            const res1 = getWalletBalance(web3Instance, accountAddress)
+            const res2 = getDepositBalance(web3Instance, accountAddress)
             const allRes = await Promise.all([res1, res2])
             walletBalance = Number(allRes[0])
             depositBalance = Number(allRes[1])
