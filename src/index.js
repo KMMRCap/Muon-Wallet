@@ -540,6 +540,9 @@ const depositSectionHandler = () => {
                 if (depositBalance >= fee) {
                     signSectionHandler()
                 }
+                else {
+                    outOfDepositBalanceSectionHandler()
+                }
             }
             else {
                 handleLoadingButton(button, true)

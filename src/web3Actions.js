@@ -221,7 +221,8 @@ const depositMuon = async (web3, amount, account) => {
  */
 
 const approve = async (web3, account, app, method, params) => {
-    const timestamp = Math.floor(Date.now() / 1000);
+    // const timestamp = Math.floor(Date.now() / 1000);
+	const timestamp = Math.floor(Date.now());
     const appId = Apps.find(i => i.name === app).id
     const hash = utils.soliditySha3(
         { type: "address", value: account },
@@ -236,7 +237,8 @@ const approve = async (web3, account, app, method, params) => {
         paramsToConcat = paramsToConcat.concat(`&params[${item[0]}]=${item[1]}`)
     })
 
-    const url = `http://89.106.206.214:8000/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`;
+    const url = `http://139.59.101.131:8080/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`;
+    // const url = `http://139.59.101.131:8080/v1?app=tss&method=test&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`;
 
     const res = await fetch(url, { method: 'GET' })
     const data = await res.json()
