@@ -8,7 +8,6 @@ const {
     checkDepositAllowance, approveDepositToken, depositToken, signAndRequest,
 } = require('./web3Actions')
 const { priceHandler, exchageRateCalculator } = require('./utils/price')
-const { logoHandler } = require('./utils/logo')
 
 const Tokens = require('./utils/Tokens.json')
 const Apps = require('./utils/Apps.json')
@@ -241,7 +240,7 @@ const buySection = () => {
                     </div>
                 </div>
                 <div class='allowance'>
-                    <h6>Allowance: <span>${swapAllowance(swapAllowance)}</span> <span>${selectedToken?.name || Tokens[1].name}</span></h6>
+                    <h6>Allowance: <span>${priceHandler(swapAllowance)}</span> <span>${selectedToken?.name || Tokens[1].name}</span></h6>
                 </div>
                 <!-- <div class='checkbox'>
                     <input type="checkbox" name="checkbox" id='check-buy-and-deposit' />
@@ -421,7 +420,11 @@ const buySectionHandler = () => {
     const handleSelectedTokenBalance = async () => {
         handleLoadingButton(button, true)
 
-        logoHandler(selectedToken.icon, logo)
+        Tokens.forEach(i => {
+            $(logo).removeClass(i.icon)
+        })
+        $(logo).addClass(selectedToken.icon)
+
         await handleCheckSwapAllowance()
 
         const balance = await getSelectedTokenBalance(web3Instance, accountAddress, selectedToken.address)

@@ -139,9 +139,16 @@
 }
 
 #muon-wallet .modal-body .buy-section .swap-actions .swap-box .from .logo {
-  background-image: url(../../images/tokens/bnb.png);
   background-size: 32px;
 }
+
+#muon-wallet .modal-body .buy-section .swap-actions .swap-box .from .logo.bnb {
+  background-image: url(../../images/tokens/bnb.png);
+}
+#muon-wallet .modal-body .buy-section .swap-actions .swap-box .from .logo.usdc {
+  background-image: url(../../images/tokens/usdc.png);
+}
+
 #muon-wallet .modal-body .buy-section .swap-actions .swap-box .to .logo {
   background-image: url(../../images/logo2.png);
   border: 2px solid var(--primary-light);
