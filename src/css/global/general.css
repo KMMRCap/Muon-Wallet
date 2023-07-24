@@ -15,3 +15,30 @@ select:focus-visible {
   border: none;
   outline: none;
 }
+
+h1,h2,h3,h4,h5,h6{
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+h3{
+  font-size: 1.17em;
+}
+
+h5{
+  font-size: .83em;
+}
+
+h6{
+  font-size: .67em;
+}
+
+p{
+  margin-bottom: 0;
+  line-height: 15px;
+}
+
+button{
+  font-size: 13px;
+  line-height: normal;
+}

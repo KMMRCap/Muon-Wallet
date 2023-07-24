@@ -2,20 +2,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--bg1);
+  background-color: var(--mw-bg1);
   padding: 10px;
   border-radius: 8px;
   margin: 1rem 0;
 }
 
 #muon-wallet .account p {
-  color: var(--black);
+  color: var(--mw-black);
   font-weight: bold;
   font-size: 12px;
   margin-bottom: 4px;
 }
 
 #muon-wallet .account span {
-  color: var(--t3);
+  color: var(--mw-t3);
   font-size: 12px;
 }

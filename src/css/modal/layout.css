@@ -21,7 +21,7 @@
   animation: fadeIn 0.7s ease normal forwards;
 }
 
-#muon-wallet .modal {
+#muon-wallet .muon-modal {
   position: absolute;
   left: 50%;
   top: -100%;
@@ -33,7 +33,7 @@
   border-radius: 10px;
   box-shadow: 0 5px 55px rgba(0, 0, 0, 0.2);
   padding: 12px;
-  background-color: var(--bg0);
+  background-color: var(--mw-bg0);
   display: flex;
   flex-direction: column;
   animation: slideIn 0.7s ease normal forwards;
@@ -44,37 +44,37 @@
   animation: fadeOut 0.7s ease normal forwards;
 }
 
-#muon-wallet.closed .modal {
+#muon-wallet.closed .muon-modal {
   animation: slideOut 0.7s ease normal forwards;
 }
 
-#muon-wallet .modal-header {
+#muon-wallet .muon-modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-#muon-wallet .modal-header .logo {
+#muon-wallet .muon-modal-header .logo {
   display: flex;
   align-items: center;
 }
 
-#muon-wallet .modal-header .logo .logo-image {
+#muon-wallet .muon-modal-header .logo .logo-image {
   background-image: url(../../images/logo.png);
   height: 20px;
   width: 24px;
   margin-right: 8px;
 }
 
-#muon-wallet .modal-header .logo h5,
-#muon-wallet .modal-header .logo h6 {
-  background-image: var(--gradient);
+#muon-wallet .muon-modal-header .logo h5,
+#muon-wallet .muon-modal-header .logo h6 {
+  background-image: var(--mw-gradient);
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
 }
 
-#muon-wallet .modal-header button {
+#muon-wallet .muon-modal-header button {
   border: none;
   cursor: pointer;
   background-image: url(../../images/close.png);
@@ -83,7 +83,7 @@
   background-color: transparent;
 }
 
-#muon-wallet .modal-body {
+#muon-wallet .muon-modal-body {
   flex-grow: 1;
   margin-top: 1rem;
 }

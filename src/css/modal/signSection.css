@@ -1,11 +1,11 @@
-#muon-wallet .modal-body .sign-section {
+#muon-wallet .muon-modal-body .sign-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-#muon-wallet .modal-body .sign-section .balance {
+#muon-wallet .muon-modal-body .sign-section .balance {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,9 +13,9 @@
   margin-bottom: 1rem;
 }
 
-#muon-wallet .modal-body .sign-section .balance div {
-  border: 2px solid var(--primary-light);
-  background-color: var(--primary-low);
+#muon-wallet .muon-modal-body .sign-section .balance div {
+  border: 2px solid var(--mw-primary-light);
+  background-color: var(--mw-primary-low);
   border-radius: 50rem;
   margin-bottom: 8px;
   background-image: url(../../images/logo2.png);
@@ -25,13 +25,13 @@
   height: 4rem;
 }
 
-#muon-wallet .modal-body .sign-section .balance span {
-  color: var(--t3);
+#muon-wallet .muon-modal-body .sign-section .balance span {
+  color: var(--mw-t3);
   font-size: 12px;
   margin-bottom: 4px;
 }
 
-#muon-wallet .modal-body .sign-section .balance h3 {
-  color: var(--primary);
+#muon-wallet .muon-modal-body .sign-section .balance h3 {
+  color: var(--mw-primary);
   font-size: 20px;
 }

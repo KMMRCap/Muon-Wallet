@@ -1,5 +1,5 @@
-#muon-wallet .modal-body .actions {
-  background-color: var(--bg2);
+#muon-wallet .muon-modal-body .actions {
+  background-color: var(--mw-bg2);
   border-radius: 8px;
   padding: 14px 10px 10px;
   display: flex;
@@ -7,40 +7,40 @@
   width: 100%;
 }
 
-#muon-wallet .modal-body .actions div {
+#muon-wallet .muon-modal-body .actions div {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
 }
 
-#muon-wallet .modal-body .actions h5 {
+#muon-wallet .muon-modal-body .actions h5 {
   font-size: 12px;
-  color: var(--t2);
+  color: var(--mw-t2);
   font-weight: normal;
   /* white-space: pre-wrap; */
 }
 
-#muon-wallet .modal-body .actions div h5.bold {
+#muon-wallet .muon-modal-body .actions div h5.bold {
   font-weight: bold;
-  color: var(--t1);
+  color: var(--mw-t1);
 }
 
-#muon-wallet .modal-body .actions div div {
+#muon-wallet .muon-modal-body .actions div div {
   flex-direction: column;
   align-items: end;
 }
 
-#muon-wallet .modal-body .actions div h6 {
-  color: var(--t2);
+#muon-wallet .muon-modal-body .actions div h6 {
+  color: var(--mw-t2);
   font-weight: normal;
 }
 
-#muon-wallet .modal-body .actions .buttons {
+#muon-wallet .muon-modal-body .actions .buttons {
   align-items: center;
   margin-bottom: 0;
 }
 
-#muon-wallet .modal-body .actions .buttons button {
+#muon-wallet .muon-modal-body .actions .buttons button {
   width: 48%;
   text-align: center;
   padding: 12px 0;
@@ -53,16 +53,16 @@
   transition: 0.3s ease;
 }
 
-#muon-wallet .modal-body .actions .buttons button:hover {
+#muon-wallet .muon-modal-body .actions .buttons button:hover {
   opacity: 0.8;
 }
 
-#muon-wallet .modal-body .actions .buttons button.cancel {
-  background: var(--bg1);
-  color: var(--t1);
+#muon-wallet .muon-modal-body .actions .buttons button.cancel {
+  background: var(--mw-bg1);
+  color: var(--mw-t1);
 }
 
-#muon-wallet .modal-body .actions .buttons button.submit {
-  background: var(--primary);
-  color: var(--white);
+#muon-wallet .muon-modal-body .actions .buttons button.submit {
+  background: var(--mw-primary);
+  color: var(--mw-white);
 }

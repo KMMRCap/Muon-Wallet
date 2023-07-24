@@ -58,9 +58,9 @@ const modalLayout = () => {
     return String.raw`
         <div id="muon-wallet">
             <div class="backdrop"></div>
-            <div class="modal">
+            <div class="muon-modal">
                 
-                <div class="modal-header">
+                <div class="muon-modal-header">
                     <div class="logo">
                         <span class='logo-image'></span>
                         <div>
@@ -78,7 +78,7 @@ const modalLayout = () => {
                     </div>
                 </div>
 
-                <div class="modal-body"></div>
+                <div class="muon-modal-body"></div>
             </div>
         </div>
     `
@@ -303,8 +303,8 @@ const handleCloseModal = (data) => {
 
 const handleCloseButtons = () => {
     const backdrop = $('#muon-wallet .backdrop')
-    const closeButton = $('#muon-wallet .modal-header .close')
-    const rejectButton = $('#muon-wallet .modal-body .actions .buttons .cancel')
+    const closeButton = $('#muon-wallet .muon-modal-header .close')
+    const rejectButton = $('#muon-wallet .muon-modal-body .actions .buttons .cancel')
     backdrop.on('click', () => handleCloseModal())
     closeButton.on('click', () => handleCloseModal())
     if (rejectButton) {
@@ -315,12 +315,12 @@ const handleCloseButtons = () => {
 // ----------
 
 const signSectionHandler = () => {
-    const modalBody = $('#muon-wallet .modal-body')
+    const modalBody = $('#muon-wallet .muon-modal-body')
     $(modalBody).empty()
     $(modalBody).append(signSection())
     handleCloseButtons()
 
-    const button = $('#muon-wallet .modal-body .actions .buttons .submit')
+    const button = $('#muon-wallet .muon-modal-body .actions .buttons .submit')
 
     $(button).on('click', async () => {
         try {
@@ -337,12 +337,12 @@ const signSectionHandler = () => {
 }
 
 const outOfWalletBalanceSectionHandler = () => {
-    const modalBody = $('#muon-wallet .modal-body')
+    const modalBody = $('#muon-wallet .muon-modal-body')
     $(modalBody).empty()
     $(modalBody).append(outOfWalletBalanceSection())
     handleCloseButtons()
 
-    const button = $('#muon-wallet .modal-body .out-buttons .buy')
+    const button = $('#muon-wallet .muon-modal-body .out-buttons .buy')
 
     $(button).on('click', () => {
         buySectionHandler()
@@ -350,13 +350,13 @@ const outOfWalletBalanceSectionHandler = () => {
 }
 
 const outOfDepositBalanceSectionHandler = () => {
-    const modalBody = $('#muon-wallet .modal-body')
+    const modalBody = $('#muon-wallet .muon-modal-body')
     $(modalBody).empty()
     $(modalBody).append(outOfDepositBalanceSection())
     handleCloseButtons()
 
-    const buyButton = $('#muon-wallet .modal-body .out-buttons .buy')
-    const depositButton = $('#muon-wallet .modal-body .out-buttons .deposit')
+    const buyButton = $('#muon-wallet .muon-modal-body .out-buttons .buy')
+    const depositButton = $('#muon-wallet .muon-modal-body .out-buttons .deposit')
 
     $(buyButton).on('click', () => {
         buySectionHandler()
@@ -367,19 +367,19 @@ const outOfDepositBalanceSectionHandler = () => {
 }
 
 const buySectionHandler = () => {
-    const modalBody = $('#muon-wallet .modal-body')
+    const modalBody = $('#muon-wallet .muon-modal-body')
     $(modalBody).empty()
     $(modalBody).append(buySection())
     handleCloseButtons()
 
-    const selectbox = $('#muon-wallet .modal-body .swap-box .from select')
-    const input = $('#muon-wallet .modal-body .swap-box .from input')
-    const logo = $('#muon-wallet .modal-body .swap-box .from .logo')
-    const button = $('#muon-wallet .modal-body .swap-actions .buy-and-deposit')
-    const allowanceDiv = $('#muon-wallet .modal-body .swap-actions .allowance')
-    const allowanceValue = $('#muon-wallet .modal-body .swap-actions .allowance h6 span:first-child')
-    const allowanceToken = $('#muon-wallet .modal-body .swap-actions .allowance h6 span:last-child')
-    // const checkbox = $('#muon-wallet .modal-body .swap-actions .checkbox input')
+    const selectbox = $('#muon-wallet .muon-modal-body .swap-box .from select')
+    const input = $('#muon-wallet .muon-modal-body .swap-box .from input')
+    const logo = $('#muon-wallet .muon-modal-body .swap-box .from .logo')
+    const button = $('#muon-wallet .muon-modal-body .swap-actions .buy-and-deposit')
+    const allowanceDiv = $('#muon-wallet .muon-modal-body .swap-actions .allowance')
+    const allowanceValue = $('#muon-wallet .muon-modal-body .swap-actions .allowance h6 span:first-child')
+    const allowanceToken = $('#muon-wallet .muon-modal-body .swap-actions .allowance h6 span:last-child')
+    // const checkbox = $('#muon-wallet .muon-modal-body .swap-actions .checkbox input')
 
     Tokens.forEach(i => {
         $(selectbox).append($('<option>', { value: i.name, text: i.name }));
@@ -429,7 +429,7 @@ const buySectionHandler = () => {
 
         const balance = await getSelectedTokenBalance(web3Instance, accountAddress, selectedToken.address)
         selectedTokenBalance = balance
-        $('#muon-wallet .modal-body .swap-actions .from h6 span').text(priceHandler(selectedTokenBalance))
+        $('#muon-wallet .muon-modal-body .swap-actions .from h6 span').text(priceHandler(selectedTokenBalance))
 
         await handleSwapInputValues(swapInputValue)
         handleLoadingButton(button, false)
@@ -438,7 +438,7 @@ const buySectionHandler = () => {
     const handleSwapInputValues = async (value) => {
         handleLoadingButton(button, true)
         swapInputValue = Number(value)
-        const inputbox = $('#muon-wallet .modal-body .swap-actions .from')
+        const inputbox = $('#muon-wallet .muon-modal-body .swap-actions .from')
         if (!swapInputValue) {
             $(inputbox).css('border', 'none')
             handleDisableButton(button, true)
@@ -456,7 +456,7 @@ const buySectionHandler = () => {
         rate2 = Number(selectedToken.reversed ? res.rate1 : res.rate2)
 
         const convertedValue = exchageRateCalculator(swapInputValue, rate1, rate2)
-        const resultSpan = $('#muon-wallet .modal-body .swap-actions .to .converted')
+        const resultSpan = $('#muon-wallet .muon-modal-body .swap-actions .to .converted')
         $(resultSpan).text(priceHandler(convertedValue))
 
         handleButtonOnAllowance(value)
@@ -519,15 +519,15 @@ const buySectionHandler = () => {
 }
 
 const depositSectionHandler = () => {
-    const modalBody = $('#muon-wallet .modal-body')
+    const modalBody = $('#muon-wallet .muon-modal-body')
     $(modalBody).empty()
     $(modalBody).append(depositSection())
     handleCloseButtons()
 
-    const input = $('#muon-wallet .modal-body .swap-actions .to input')
-    const inputbox = $('#muon-wallet .modal-body .swap-actions .to')
-    const button = $('#muon-wallet .modal-body .swap-actions .deposit')
-    const allowanceText = $('#muon-wallet .modal-body .swap-actions .allowance h6 span')
+    const input = $('#muon-wallet .muon-modal-body .swap-actions .to input')
+    const inputbox = $('#muon-wallet .muon-modal-body .swap-actions .to')
+    const button = $('#muon-wallet .muon-modal-body .swap-actions .deposit')
+    const allowanceText = $('#muon-wallet .muon-modal-body .swap-actions .allowance h6 span')
 
     $(input).val(depositInputValue)
 
