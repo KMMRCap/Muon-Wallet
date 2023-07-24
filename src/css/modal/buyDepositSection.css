@@ -104,6 +104,58 @@
   color: var(--mw-t1);
 }
 
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from button {
+  background-color: transparent;
+  border: none;
+  color: var(--mw-t1);
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+  position: relative;
+}
+
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from button span {
+  background-image: url(../../images/arrow-down.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 10px;
+  height: 10px;
+}
+
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from button h5 {
+  color: var(--mw-t1);
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from button ul {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  border-radius: 3px;
+  box-shadow: 0 0 5px .1px rgba(0,0,0,.5);
+  margin: 0;
+  flex-direction: column;
+  background-color: var(--mw-bg1);
+  display: none;
+}
+
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from button li {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--mw-t3);
+  transition: .1s ease;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from button li:hover {
+  background-color: var(--mw-bg2);
+}
+
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from button li:last-child {
+  border-bottom: none;
+}
+
 #muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box input,
 #muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box span.converted {
   background-color: transparent;
@@ -117,15 +169,7 @@
   margin-right: 10px;
 }
 
-#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .data select {
-  background-color: transparent;
-  border: none;
-  color: var(--mw-t1);
-  font-weight: bold;
-  font-size: 12px;
-}
-
-#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .data h5 {
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .to h5 {
   margin-right: 12px;
   color: var(--mw-t1);
 }
@@ -223,7 +267,7 @@
   clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
-#muon-wallet .muon-modal-body .buy-section .swap-actions button {
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box ~ button {
   background-color: var(--mw-primary);
   color: white;
   width: 100%;
@@ -237,11 +281,11 @@
   position: relative;
 }
 
-#muon-wallet .muon-modal-body .buy-section .swap-actions button:hover {
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box ~ button:hover {
   opacity: 0.8;
 }
 
-#muon-wallet .muon-modal-body .buy-section .swap-actions button:disabled {
+#muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box ~ button:disabled {
   opacity: 0.8;
   cursor: no-drop;
 }

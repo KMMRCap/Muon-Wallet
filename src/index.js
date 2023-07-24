@@ -226,7 +226,11 @@ const buySection = () => {
                         <input type='number' value='0.00' placeholder='0.00' />
                         <div class='data'>
                             <h6>Balance: <span>0</span></h6>
-                            <select></select>
+                            <button>
+                                <span></span>
+                                <h5>${selectedToken?.name || Tokens[1].name}</h5>
+                                <ul class='tokens-list'></ul>
+                            </button>
                             <div class='logo'></div>
                         </div>
                     </div>
@@ -372,7 +376,9 @@ const buySectionHandler = () => {
     $(modalBody).append(buySection())
     handleCloseButtons()
 
-    const selectbox = $('#muon-wallet .muon-modal-body .swap-box .from select')
+    const selectboxButton = $('#muon-wallet .muon-modal-body .swap-box .from button')
+    const selectboxText = $('#muon-wallet .muon-modal-body .swap-box .from button h5')
+    const dropdown = $('#muon-wallet .muon-modal-body .swap-box .from button ul')
     const input = $('#muon-wallet .muon-modal-body .swap-box .from input')
     const logo = $('#muon-wallet .muon-modal-body .swap-box .from .logo')
     const button = $('#muon-wallet .muon-modal-body .swap-actions .buy-and-deposit')
@@ -382,13 +388,20 @@ const buySectionHandler = () => {
     // const checkbox = $('#muon-wallet .muon-modal-body .swap-actions .checkbox input')
 
     Tokens.forEach(i => {
-        $(selectbox).append($('<option>', { value: i.name, text: i.name }));
+        $(dropdown).append(`<li>${i.name}</li>`);
     })
+
+    const dropdownItem = $('#muon-wallet .muon-modal-body .swap-box .from button ul li')
+
     selectedToken = selectedToken || Tokens[0]
-    $(selectbox).val(selectedToken?.name)
+    $(selectboxText).text(selectedToken?.name)
     $(input).val(swapInputValue)
     // $(checkbox).val(allowBuyAndDeposit)
     // $(button).text(allowBuyAndDeposit ? 'Buy & Deposit' : 'Buy')
+
+    $(selectboxButton).on('click', (e) => {
+        $(dropdown).toggle()
+    })
 
     const handleButtonOnAllowance = (value) => {
         if (selectedToken.address === '0x0') {
@@ -466,10 +479,13 @@ const buySectionHandler = () => {
     handleSelectedTokenBalance()
     handleSwapInputValues(swapInputValue)
 
-    $(selectbox).on('change', (e) => {
-        const found = Tokens.find(i => i.name === e.target.value)
-        selectedToken = found
-        handleSelectedTokenBalance()
+    $(dropdownItem).each((index, item) => {
+        $(item).on('click', () => {
+            if (selectedToken.name !== Tokens[index].name) {
+                selectedToken = Tokens[index]
+                handleSelectedTokenBalance()
+            }
+        })
     })
 
     let debounce = null
