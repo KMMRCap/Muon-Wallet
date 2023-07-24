@@ -1,7 +1,7 @@
 /* ---------------------------------------------------- */
 /* Animations */
 
-@keyframes slideIn {
+@keyframes mw-slideIn {
   from {
     top: -150%;
   }
@@ -10,7 +10,7 @@
   }
 }
 
-@-webkit-keyframes slideIn {
+@-webkit-keyframes mw-slideIn {
   from {
     top: -150%;
   }
@@ -21,7 +21,7 @@
 
 
 
-@keyframes slideOut {
+@keyframes mw-slideOut {
   from {
     top: 50%;
   }
@@ -30,7 +30,7 @@
   }
 }
 
-@-webkit-keyframes slideOut {
+@-webkit-keyframes mw-slideOut {
   from {
     top: 50%;
   }
@@ -41,7 +41,7 @@
 
 
 
-@keyframes fadeIn {
+@keyframes mw-fadeIn {
   from {
     opacity: 0;
   }
@@ -50,7 +50,7 @@
   }
 }
 
-@-webkit-keyframes fadeIn {
+@-webkit-keyframes mw-fadeIn {
   from {
     opacity: 0;
   }
@@ -61,7 +61,7 @@
 
 
 
-@keyframes fadeOut {
+@keyframes mw-fadeOut {
   from {
     opacity: 1;
   }
@@ -70,7 +70,7 @@
   }
 }
 
-@-webkit-keyframes fadeOut {
+@-webkit-keyframes mw-fadeOut {
   from {
     opacity: 1;
   }
@@ -81,7 +81,7 @@
 
 
 
-@keyframes spin {
+@keyframes mw-spin {
   0% {
     transform: rotate(0deg);
   }
@@ -90,7 +90,7 @@
   }
 }
 
-@-webkit-keyframes spin {
+@-webkit-keyframes mw-spin {
   0% {
     -webkit-transform: rotate(0deg);
   }

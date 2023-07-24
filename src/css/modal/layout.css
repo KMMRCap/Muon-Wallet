@@ -7,7 +7,7 @@
 }
 
 #muon-wallet * {
-  font-family: "Lato" !important;
+  font-family: "MW_Lato" !important;
 }
 
 #muon-wallet .backdrop {
@@ -18,7 +18,7 @@
   left: 0;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 1;
-  animation: fadeIn 0.7s ease normal forwards;
+  animation: mw-fadeIn 0.7s ease normal forwards;
 }
 
 #muon-wallet .muon-modal {
@@ -36,16 +36,16 @@
   background-color: var(--mw-bg0);
   display: flex;
   flex-direction: column;
-  animation: slideIn 0.7s ease normal forwards;
+  animation: mw-slideIn 0.7s ease normal forwards;
   z-index: 2;
 }
 
 #muon-wallet.closed .backdrop {
-  animation: fadeOut 0.7s ease normal forwards;
+  animation: mw-fadeOut 0.7s ease normal forwards;
 }
 
 #muon-wallet.closed .muon-modal {
-  animation: slideOut 0.7s ease normal forwards;
+  animation: mw-slideOut 0.7s ease normal forwards;
 }
 
 #muon-wallet .muon-modal-header {

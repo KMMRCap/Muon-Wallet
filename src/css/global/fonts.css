@@ -1,10 +1,8 @@
 /* ---------------------------------------------------- */
 /* Fonts */
 
-/* @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap'); */
-
 @font-face {
-  font-family: "Lato";
+  font-family: "MW_Lato";
   src: url(../../fonts/Lato.eot);
   src: url(../../fonts/Lato.ttf) format("embedded-opentype");
   src: url(../../fonts/Lato.woff) format("truetype");

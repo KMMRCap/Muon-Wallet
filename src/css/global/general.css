@@ -1,44 +1,49 @@
 /* ---------------------------------------------------- */
 /* General */
 
-* {
+#muon-wallet * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-input:focus,
-select:focus,
-input:focus-visible,
-select:focus-visible {
+#muon-wallet input:focus,
+#muon-wallet select:focus,
+#muon-wallet input:focus-visible,
+#muon-wallet select:focus-visible {
   box-shadow: none;
   border: none;
   outline: none;
 }
 
-h1,h2,h3,h4,h5,h6{
+#muon-wallet h1,
+#muon-wallet h2,
+#muon-wallet h3,
+#muon-wallet h4,
+#muon-wallet h5,
+#muon-wallet h6{
   margin-bottom: 0;
   font-weight: bold;
 }
 
-h3{
+#muon-wallet h3{
   font-size: 1.17em;
 }
 
-h5{
+#muon-wallet h5{
   font-size: .83em;
 }
 
-h6{
+#muon-wallet h6{
   font-size: .67em;
 }
 
-p{
+#muon-wallet p{
   margin-bottom: 0;
   line-height: 15px;
 }
 
-button{
+#muon-wallet button{
   font-size: 13px;
   line-height: normal;
 }
