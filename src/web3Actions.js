@@ -1,7 +1,7 @@
 const detectEthereumProvider = require('@metamask/detect-provider')
 const { utils, Web3 } = require('web3')
 const { Contracts } = require('./utils/contracts')
-const Apps = require('./utils/Apps.json')
+const { fullFormat } = require('./utils/time')
 
 // ==========================================================================
 // REQUIRED CHECKS TO OPEN MODAL
@@ -284,14 +284,12 @@ const depositToken = async (web3, amount, account) => {
  */
 
 const signAndRequest = async (web3, account, app, method, params) => {
+
+    const message = `I approve sending request to the ${app}.${method}() on the Muon network at ${fullFormat()}`
+
+    const signature = await web3.eth.personal.sign(message, account, '')
+
     const timestamp = Math.floor(Date.now());
-    const appId = Apps.find(i => i.name === app).id
-    const hash = utils.soliditySha3(
-        { type: "address", value: account },
-        { type: "uint64", value: timestamp },
-        { type: "uint256", value: appId }
-    )
-    const signature = await web3.eth.personal.sign(hash, account, 'Test Password')
 
     const paramsObject = JSON.parse(params)
     let paramsToConcat = ''
