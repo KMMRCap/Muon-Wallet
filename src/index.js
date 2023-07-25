@@ -2,7 +2,7 @@ const $ = require('jquery')
 const { Web3 } = require('web3')
 
 const {
-    detectProvider, checkWalletConnection,
+    detectProvider, checkWalletConnection, checkActiveChainId, detectAccountAndChainChange, removeEventListeners,
     getSelectedAccount, getWalletBalance, getDepositBalance,
     getSelectedTokenBalance, checkSelectedTokenAllowance, approveSwapTokens, getPairExchangeRates, swapTokens,
     checkDepositAllowance, approveDepositToken, depositToken, signAndRequest,
@@ -292,7 +292,7 @@ const depositSection = () => {
 // -------------------------------------------------
 // Modal Content Handlers
 
-const handleCloseModal = (data) => {
+const handleCloseModal = (data, err) => {
     $('#muon-wallet').addClass('closed')
     setTimeout(() => {
         $('#muon-wallet').remove()
@@ -300,7 +300,8 @@ const handleCloseModal = (data) => {
             resolver(data)
         }
         else {
-            rejecter('Modal closed without any result')
+            rejecter(err || 'Modal closed without any result')
+            removeEventListeners()
         }
     }, 700);
 }
@@ -695,6 +696,8 @@ const request = (appName, methodName, parameters) => {
             web3Instance = new Web3(provider)
 
             checkWalletConnection()
+            await checkActiveChainId(web3Instance)
+            detectAccountAndChainChange(handleCloseModal)
 
             accountAddress = await getSelectedAccount(web3Instance)
             const res1 = getWalletBalance(web3Instance, accountAddress)
@@ -707,6 +710,7 @@ const request = (appName, methodName, parameters) => {
         }
         catch (err) {
             rejecter(err)
+            removeEventListeners()
         }
     })
     return promise

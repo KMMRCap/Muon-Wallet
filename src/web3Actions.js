@@ -34,6 +34,30 @@ const checkWalletConnection = () => {
     }
 }
 
+const checkActiveChainId = async (web3) => {
+    const chainId = await web3.eth.getChainId()
+    if (utils.toNumber(chainId) !== 97) {
+        throw 'Please switch to bsc testnet (BNB Smart Chain Testnet)'
+    }
+}
+
+const handleAccountChange = async (close) => {
+    close(null, 'Account changed during request')
+}
+const handleChainChange = async (close) => {
+    close(null, 'Chain changed during request')
+}
+
+const detectAccountAndChainChange = (close) => {
+    window.ethereum.on('accountsChanged', () => handleAccountChange(close))
+    window.ethereum.on('chainChanged', () => handleChainChange(close))
+}
+
+const removeEventListeners = (close) => {
+    window.ethereum.removeListener('accountsChanged', () => handleAccountChange(close))
+    window.ethereum.removeListener('chainChanged', () => handleChainChange(close))
+}
+
 
 // ==========================================================================
 // GENERAL
@@ -308,6 +332,9 @@ const signAndRequest = async (web3, account, app, method, params) => {
 module.exports = {
     detectProvider,
     checkWalletConnection,
+    checkActiveChainId,
+    detectAccountAndChainChange,
+    removeEventListeners,
 
     getSelectedAccount,
     getWalletBalance,
