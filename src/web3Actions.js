@@ -1,7 +1,7 @@
 const detectEthereumProvider = require('@metamask/detect-provider')
 const { utils, Web3 } = require('web3')
 const { Contracts } = require('./utils/contracts')
-const { fullFormat } = require('./utils/time')
+const Apps = require('./utils/Apps.json')
 
 // ==========================================================================
 // REQUIRED CHECKS TO OPEN MODAL
@@ -309,11 +309,32 @@ const depositToken = async (web3, amount, account) => {
 
 const signAndRequest = async (web3, account, app, method, params) => {
 
-    const message = `I approve sending request to the ${app}.${method}() on the Muon network at ${fullFormat()}`
-
-    const signature = await web3.eth.personal.sign(message, account, '')
-
     const timestamp = Math.floor(Date.now());
+    const appId = Apps.find(i => i.name === app).id
+
+    const eip712TypedData = {
+        types: {
+            EIP712Domain: [{ type: 'string', name: 'name' }],
+            Message: [
+                { type: 'address', name: 'address' },
+                { type: 'uint64', name: 'timestamp' },
+                { type: 'uint256', name: 'appId' },
+            ]
+        },
+        domain: { name: 'Muonize' },
+        primaryType: 'Message',
+        message: { address: account, timestamp, appId }
+    };
+    const dataToSign = JSON.stringify(eip712TypedData);
+
+    const signature = await web3.currentProvider.request(
+        {
+            id: Math.floor(Date.now() / 1000),
+            jsonrpc: '2.0',
+            method: 'eth_signTypedData_v4',
+            params: [account, dataToSign]
+        }
+    )
 
     const paramsObject = JSON.parse(params)
     let paramsToConcat = ''
