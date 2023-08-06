@@ -112,6 +112,27 @@ const getDepositBalance = async (web3, account) => {
     return balance
 }
 
+/**
+ * @param {string} account The account address string
+ * @returns {Promise<number>} Returns deposited muon balance
+ */
+
+const getUsedDepositedBalance = async (account) => {
+    const res = await fetch('https://fees.muon.net/get-used-balance', {
+        method: 'POST',
+        body: JSON.stringify({ spender: account }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    const data = await res.json()
+    if (data.success) {
+        const value = data.usedBalance ? utils.fromWei(data.usedBalance, 'ether') : 0
+        return value
+    }
+    else {
+        throw 'Unable to get used balance'
+    }
+}
+
 // ==========================================================================
 // SWAP TOKENS
 // ==========================================================================
@@ -344,7 +365,10 @@ const signAndRequest = async (web3, account, app, method, params) => {
 
     const url = `http://139.59.101.131:8080/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`;
 
-    const res = await fetch(url, { method: 'GET' })
+    const res = await fetch(url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
     const data = await res.json()
     return data
 }
@@ -360,6 +384,7 @@ module.exports = {
     getSelectedAccount,
     getWalletBalance,
     getDepositBalance,
+    getUsedDepositedBalance,
 
     getSelectedTokenBalance,
     getPairExchangeRates,

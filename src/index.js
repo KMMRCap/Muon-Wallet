@@ -3,7 +3,7 @@ const { Web3 } = require('web3')
 
 const {
     detectProvider, checkWalletConnection, checkActiveChainId, detectAccountAndChainChange, removeEventListeners,
-    getSelectedAccount, getWalletBalance, getDepositBalance,
+    getSelectedAccount, getWalletBalance, getDepositBalance, getUsedDepositedBalance,
     getSelectedTokenBalance, checkSelectedTokenAllowance, approveSwapTokens, getPairExchangeRates, swapTokens,
     checkDepositAllowance, approveDepositToken, depositToken, signAndRequest,
 } = require('./web3Actions')
@@ -36,7 +36,7 @@ let accountAddress = null
 let walletBalance = null
 let depositBalance = null
 
-let fee = 1.2
+let fee = 1
 let convertedFee = 0.1
 
 let selectedToken = null
@@ -702,9 +702,10 @@ const request = (appName, methodName, parameters) => {
             accountAddress = await getSelectedAccount(web3Instance)
             const res1 = getWalletBalance(web3Instance, accountAddress)
             const res2 = getDepositBalance(web3Instance, accountAddress)
-            const allRes = await Promise.all([res1, res2])
+            const res3 = getUsedDepositedBalance(accountAddress)
+            const allRes = await Promise.all([res1, res2, res3])
             walletBalance = Number(allRes[0])
-            depositBalance = Number(allRes[1])
+            depositBalance = Number(allRes[1]) - Number(allRes[2])
 
             handleOpenModal()
         }
