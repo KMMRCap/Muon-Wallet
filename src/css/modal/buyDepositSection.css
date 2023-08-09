@@ -19,7 +19,7 @@
   background-color: var(--mw-primary-low);
   border-radius: 50rem;
   margin-bottom: 8px;
-  background-image: url(../../images/logo2.png);
+  background-image: url(../../images/logo2.webp);
   background-repeat: no-repeat;
   background-position: center;
   background-size: 25px;
@@ -115,7 +115,7 @@
 }
 
 #muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from button span {
-  background-image: url(../../images/arrow-down.png);
+  background-image: url(../../images/arrow-down.webp);
   background-position: center;
   background-repeat: no-repeat;
   width: 10px;
@@ -187,14 +187,14 @@
 }
 
 #muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from .logo.bnb {
-  background-image: url(../../images/tokens/bnb.png);
+  background-image: url(../../images/tokens/bnb.svg);
 }
 #muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .from .logo.usdc {
-  background-image: url(../../images/tokens/usdc.png);
+  background-image: url(../../images/tokens/usdc.svg);
 }
 
 #muon-wallet .muon-modal-body .buy-section .swap-actions .swap-box .to .logo {
-  background-image: url(../../images/logo2.png);
+  background-image: url(../../images/logo2.webp);
   border: 2px solid var(--mw-primary-light);
   background-color: var(--mw-primary-low);
   background-size: 22px;
@@ -206,7 +206,7 @@
   .swap-actions
   .swap-box::after {
   content: "";
-  background-image: url(../../images/convert.png);
+  background-image: url(../../images/convert.webp);
   background-repeat: no-repeat;
   background-position: center;
   border: 2px solid var(--mw-bg2);

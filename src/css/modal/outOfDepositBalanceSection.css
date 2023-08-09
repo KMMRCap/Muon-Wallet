@@ -18,7 +18,7 @@
   background-color: var(--mw-primary-low);
   border-radius: 50rem;
   margin-bottom: 8px;
-  background-image: url(../../images/logo2.png);
+  background-image: url(../../images/logo2.webp);
   background-repeat: no-repeat;
   background-position: center;
   background-size: 25px;
@@ -108,7 +108,7 @@
   .actions
   .insufficient
   span {
-  background-image: url(../../images/alert.png);
+  background-image: url(../../images/alert.webp);
   background-repeat: no-repeat;
   background-position: center;
   background-size: 1rem;
@@ -138,7 +138,7 @@
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  background-image: url(../../images/alert.png);
+  background-image: url(../../images/alert.webp);
   background-repeat: no-repeat;
   background-position: center;
   background-size: 1rem;
