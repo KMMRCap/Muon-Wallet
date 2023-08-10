@@ -72,7 +72,7 @@ const modalLayout = () => {
         <div id="muon-wallet">
             <div class="backdrop"></div>
             <div class="muon-modal">
-                
+
                 <div class="muon-modal-header">
                     <div class="logo">
                         <span class='logo-image'></span>
@@ -659,9 +659,9 @@ const handleLoadingButton = (elem, status) => {
 // Modal Wallet Request
 
 /**
- * @param {string} appName The string
- * @param {string} methodName The string
- * @param {object} parameters The string
+ * @param {string} appName The name of the app
+ * @param {string} methodName The method name of the app
+ * @param {object} parameters The parameters of the method of the app
  * @returns {Promise<any>}
  */
 
