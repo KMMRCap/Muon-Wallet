@@ -1,0 +1,110 @@
+#muon-wallet {
+	.muon-modal-body {
+		.out-of-deposit-balance-section {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			.balance {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 1rem;
+				div {
+					border: 2px solid var(--mw-primary-light);
+					background-color: var(--mw-primary-low);
+					border-radius: 50rem;
+					margin-bottom: 8px;
+					background-image: url(../images/logo2.webp);
+					background-repeat: no-repeat;
+					background-position: center;
+					background-size: 25px;
+					width: 2.5rem;
+					height: 2.5rem;
+				}
+				span {
+					color: var(--mw-t3);
+					font-size: 12px;
+					margin-bottom: 4px;
+				}
+				h3 {
+					color: var(--mw-t2);
+					font-size: 20px;
+				}
+			}
+			.out-buttons {
+				display: flex;
+				justify-content: space-between;
+				width: 97%;
+				margin-inline: auto;
+				margin-bottom: 8px;
+				button {
+					font-weight: bold;
+					border: none;
+					cursor: pointer;
+					border-radius: 8px;
+					width: 49%;
+					height: 36px;
+					letter-spacing: 1px;
+					transition: 0.3s ease;
+					&:hover {
+						opacity: 0.8;
+					}
+				}
+				.deposit {
+					background-color: var(--mw-primary);
+					color: var(--mw-white);
+				}
+				.buy {
+					background-color: var(--mw-bg2);
+					color: var(--mw-primary);
+					border: 1px solid var(--mw-primary);
+				}
+			}
+			.actions {
+				background-color: var(--mw-warning-low);
+				.insufficient {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					margin-bottom: 0;
+					h5 {
+						color: var(--mw-warning);
+						font-weight: bold;
+						margin-right: 8px;
+						margin-bottom: 4px;
+					}
+					span {
+						background-image: url(../images/alert.webp);
+						background-repeat: no-repeat;
+						background-position: center;
+						background-size: 1rem;
+						width: 16px;
+						height: 16px;
+					}
+				}
+				.buttons {
+					.submit {
+						background-color: var(--mw-bg3);
+						position: relative;
+						cursor: initial;
+						&::after {
+							content: "";
+							position: absolute;
+							right: 10px;
+							top: 50%;
+							transform: translateY(-50%);
+							background-image: url(../images/alert.webp);
+							background-repeat: no-repeat;
+							background-position: center;
+							background-size: 1rem;
+							width: 16px;
+							height: 16px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

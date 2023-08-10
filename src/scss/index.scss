@@ -1,0 +1,13 @@
+@import "./global/fonts";
+@import "./global/animations";
+@import "./global/variables";
+@import "./global/general";
+
+@import "./modal/layout";
+@import "./modal/account";
+@import "./modal/actions";
+@import "./modal/signSection";
+@import "./modal/outOfWalletBalanceSection";
+@import "./modal/outOfDepositBalanceSection";
+@import "./modal/buyDepositSection";
+@import "./modal/loading";

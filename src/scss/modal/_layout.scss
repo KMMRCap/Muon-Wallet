@@ -1,0 +1,85 @@
+#muon-wallet {
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	top: 0;
+	left: 0;
+	* {
+		font-family: "MW_Lato" !important;
+	}
+	.backdrop {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		background-color: rgba(0, 0, 0, 0.7);
+		z-index: 1;
+		animation: mw-fadeIn 0.7s ease normal forwards;
+	}
+	.muon-modal {
+		position: absolute;
+		left: 50%;
+		top: -100%;
+		transform: translate(-50%, -50%);
+		width: 400px;
+		max-width: 95%;
+		height: auto;
+		max-height: 85%;
+		border-radius: 10px;
+		box-shadow: 0 5px 55px rgba(0, 0, 0, 0.2);
+		padding: 12px;
+		background-color: var(--mw-bg0);
+		display: flex;
+		flex-direction: column;
+		animation: mw-slideIn 0.7s ease normal forwards;
+		z-index: 2;
+	}
+	.muon-modal-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		.logo {
+			display: flex;
+			align-items: center;
+			.logo-image {
+				background-image: url(../images/logo.webp);
+				height: 20px;
+				width: 24px;
+				margin-right: 8px;
+			}
+			h5 {
+				background-image: var(--mw-gradient);
+				color: transparent;
+				-webkit-background-clip: text;
+				background-clip: text;
+			}
+			h6 {
+				background-image: var(--mw-gradient);
+				color: transparent;
+				-webkit-background-clip: text;
+				background-clip: text;
+			}
+		}
+		button {
+			border: none;
+			cursor: pointer;
+			background-image: url(../images/close.webp);
+			width: 12px;
+			height: 12px;
+			background-color: transparent;
+		}
+	}
+	.muon-modal-body {
+		flex-grow: 1;
+		margin-top: 1rem;
+	}
+}
+#muon-wallet.closed {
+	.backdrop {
+		animation: mw-fadeOut 0.7s ease normal forwards;
+	}
+	.muon-modal {
+		animation: mw-slideOut 0.7s ease normal forwards;
+	}
+}

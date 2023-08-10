@@ -1,0 +1,272 @@
+#muon-wallet {
+	.muon-modal-body {
+		.buy-section {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			.balance-cont {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 1rem;
+				width: 95%;
+				margin-inline: auto;
+				.logo {
+					border: 2px solid var(--mw-primary-light);
+					background-color: var(--mw-primary-low);
+					border-radius: 50rem;
+					margin-bottom: 8px;
+					background-image: url(../images/logo2.webp);
+					background-repeat: no-repeat;
+					background-position: center;
+					background-size: 25px;
+					width: 2.5rem;
+					height: 2.5rem;
+				}
+				span {
+					color: var(--mw-t3);
+					font-size: 12px;
+				}
+				h6 {
+					color: var(--mw-t2);
+					font-weight: bold;
+					font-size: 12px;
+					margin-top: 8px;
+				}
+			}
+			.balance {
+				text-align: end;
+			}
+			.swap-actions {
+				background-color: var(--mw-bg2);
+				width: 100%;
+				border-radius: 8px;
+				padding: 14px 10px 10px;
+				.title {
+					color: var(--mw-t1);
+					margin-bottom: 1rem;
+				}
+				.swap-box {
+					display: flex;
+					flex-direction: column;
+					position: relative;
+					margin-bottom: 1rem;
+					.from {
+						display: flex;
+						justify-content: space-between;
+						padding: 12px;
+						background-color: var(--mw-bg1);
+						border-radius: 8px 8px 0px 0px;
+						color: var(--mw-t1);
+						button {
+							background-color: transparent;
+							border: none;
+							color: var(--mw-t1);
+							display: flex;
+							align-items: center;
+							margin-right: 12px;
+							position: relative;
+							span {
+								background-image: url(../images/arrow-down.webp);
+								background-position: center;
+								background-repeat: no-repeat;
+								width: 10px;
+								height: 10px;
+							}
+							h5 {
+								color: var(--mw-t1);
+								font-size: 12px;
+								margin-left: 4px;
+							}
+							ul {
+								position: absolute;
+								top: 20px;
+								left: 0;
+								border-radius: 3px;
+								box-shadow: 0 0 5px 0.1px rgba(0, 0, 0, 0.5);
+								margin: 0;
+								flex-direction: column;
+								background-color: var(--mw-bg1);
+								display: none;
+							}
+							li {
+								padding: 5px 10px;
+								border-bottom: 1px solid var(--mw-t3);
+								transition: 0.1s ease;
+								font-size: 12px;
+								font-weight: bold;
+								&:hover {
+									background-color: var(--mw-bg2);
+								}
+								&:last-child {
+									border-bottom: none;
+								}
+							}
+						}
+						.logo {
+							background-size: 32px;
+						}
+						.logo.bnb {
+							background-image: url(../images/tokens/bnb.svg);
+						}
+						.logo.usdc {
+							background-image: url(../images/tokens/usdc.svg);
+						}
+					}
+					.to {
+						display: flex;
+						justify-content: space-between;
+						padding: 12px;
+						background-color: rgba(227, 229, 254, 0.6);
+						border-radius: 0px 0px 8px 8px;
+						color: var(--mw-t2);
+						h5 {
+							margin-right: 12px;
+							color: var(--mw-t1);
+						}
+						.logo {
+							background-image: url(../images/logo2.webp);
+							border: 2px solid var(--mw-primary-light);
+							background-color: var(--mw-primary-low);
+							background-size: 22px;
+						}
+					}
+					.data {
+						display: flex;
+						align-items: center;
+						font-size: 16px;
+						white-space: nowrap;
+						h6 {
+							margin-right: 10px;
+						}
+						.logo {
+							border-radius: 50rem;
+							background-repeat: no-repeat;
+							background-position: center;
+							width: 2.2rem;
+							height: 2.2rem;
+						}
+					}
+					input {
+						background-color: transparent;
+						font-size: 22px;
+						border: none;
+						width: 7rem;
+						color: var(--mw-t2);
+					}
+					span.converted {
+						background-color: transparent;
+						font-size: 22px;
+						border: none;
+						width: 7rem;
+						color: var(--mw-t2);
+					}
+					~ {
+						button {
+							background-color: var(--mw-primary);
+							color: white;
+							width: 100%;
+							border-radius: 8px;
+							height: 36px;
+							border: none;
+							letter-spacing: 1px;
+							transition: 0.3s ease;
+							cursor: pointer;
+							font-weight: bold;
+							position: relative;
+							&:hover {
+								opacity: 0.8;
+							}
+							&:disabled {
+								opacity: 0.8;
+								cursor: no-drop;
+							}
+						}
+					}
+				}
+				.checkbox {
+					display: flex;
+					align-items: center;
+					color: var(--mw-t1);
+					font-size: 14px;
+					margin-bottom: 2rem;
+					input {
+						-webkit-appearance: none;
+						appearance: none;
+						background-color: var(--mw-bg2);
+						margin: 0;
+						margin-right: 8px;
+						border: 1px solid var(--mw-primary);
+						border-radius: 6px;
+						width: 20px;
+						height: 20px;
+						display: grid;
+						place-content: center;
+						color: currentColor;
+						&::before {
+							content: '';
+							width: 12px;
+							height: 12px;
+							transform: scale(0);
+							transition: 120ms transform ease-in-out;
+							box-shadow: inset 1em 1em var(--mw-primary);
+							transform-origin: bottom left;
+							clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+						}
+						&:checked {
+							&::before {
+								transform: scale(1);
+							}
+						}
+					}
+				}
+			}
+			&:not(.deposit) {
+				.swap-actions {
+					.allowance {
+						h6 {
+							margin-bottom: 1rem;
+							margin-left: 8px;
+							color: var(--mw-t1);
+						}
+					}
+					.swap-box {
+						&::after {
+							content: '';
+							background-image: url(../images/convert.webp);
+							background-repeat: no-repeat;
+							background-position: center;
+							border: 2px solid var(--mw-bg2);
+							background-color: var(--mw-bg1);
+							background-size: 12px;
+							width: 16px;
+							height: 22px;
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							transform: translate(-50%, -50%);
+							border-radius: 4px;
+						}
+					}
+				}
+			}
+		}
+		.buy-section.deposit {
+			.swap-actions {
+				.swap-box {
+					.to {
+						border-radius: 8px;
+						margin-bottom: 1rem;
+					}
+				}
+				.allowance {
+					h6 {
+						margin-bottom: 3rem;
+						color: var(--mw-t1);
+					}
+				}
+			}
+		}
+	}
+}

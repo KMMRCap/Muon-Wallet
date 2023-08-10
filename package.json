@@ -1,6 +1,6 @@
 {
   "name": "muon-wallet",
-  "version": "1.15.0",
+  "version": "1.16.0",
   "description": "Muon wallet package",
   "main": "./src/index.js",
   "scripts": {
@@ -16,10 +16,8 @@
   "keywords": [
     "muon",
     "muon-wallet",
-    "javascript",
     "web3",
-    "ethereum",
-    "front-end"
+	 "alice"
   ],
   "homepage": "https://muon.net",
   "repository": "https://github.com/KMMRCap/Muon-Wallet"

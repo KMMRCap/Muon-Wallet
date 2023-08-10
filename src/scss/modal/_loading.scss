@@ -1,0 +1,28 @@
+#muon-wallet {
+	.loading {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		background-color: var(--mw-t2);
+		opacity: .9;
+		border-radius: 10px;
+		z-index: 10;
+		cursor: no-drop;
+		&::after {
+			content: "";
+			position: absolute;
+			left: 47%;
+			top: 18%;
+			border: 2px solid var(--mw-white);
+			border-radius: 50%;
+			border-top: 2px solid var(--mw-black);
+			width: 20px;
+			height: 20px;
+			-webkit-animation: mw-spin 2s linear infinite;
+			animation: mw-spin 2s linear infinite;
+		}
+	}
+}
