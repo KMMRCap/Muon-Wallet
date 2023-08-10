@@ -7,12 +7,12 @@
 		height: 100%;
 		text-align: center;
 		background-color: var(--mw-t2);
-		opacity: .9;
+		opacity: 0.9;
 		border-radius: 10px;
 		z-index: 10;
 		cursor: no-drop;
 		&::after {
-			content: "";
+			content: '';
 			position: absolute;
 			left: 47%;
 			top: 18%;

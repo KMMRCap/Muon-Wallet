@@ -1,24 +1,27 @@
 {
-  "name": "muon-wallet",
-  "version": "1.16.0",
-  "description": "Muon wallet package",
-  "main": "./src/index.js",
-  "scripts": {
-    "test": ""
-  },
-  "author": "Muon.net",
-  "license": "MIT",
-  "dependencies": {
-    "@metamask/detect-provider": "^2.0.0",
-    "jquery": "^3.7.0",
-    "web3": "^4.0.1"
-  },
-  "keywords": [
-    "muon",
-    "muon-wallet",
-    "web3",
-	 "alice"
-  ],
-  "homepage": "https://muon.net",
-  "repository": "https://github.com/KMMRCap/Muon-Wallet"
+	"name": "muon-wallet",
+	"version": "1.17.0",
+	"description": "Muon wallet package",
+	"main": "./src/index.js",
+	"scripts": {
+		"test": ""
+	},
+	"author": "Muon.net",
+	"license": "MIT",
+	"dependencies": {
+		"@metamask/detect-provider": "^2.0.0",
+		"jquery": "^3.7.0",
+		"web3": "^4.0.1"
+	},
+	"devDependencies": {
+		"prettier": "^3.0.1"
+	},
+	"keywords": [
+		"muon",
+		"muon-wallet",
+		"web3",
+		"alice"
+	],
+	"homepage": "https://muon.net",
+	"repository": "https://github.com/KMMRCap/Muon-Wallet"
 }

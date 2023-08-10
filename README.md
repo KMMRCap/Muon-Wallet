@@ -23,25 +23,27 @@ import 'muon-wallet/src/css/index.css'
 Now you can import the "request" function
 
 ### Using Node.js `require()`
+
 ```bash
 const { request } = require('muon-wallet')
 ```
 
 ### Using ES6 imports
+
 ```bash
 import { request } from 'muon-wallet'
 ```
 
 ## Parameters
 
-1. appName : 
-This parameter must be the name of one of apps that exist in the [Muon Explorer](https://explorer.muon.net) apps list and it should be string.  
+1. appName :
+   This parameter must be the name of one of apps that exist in the [Muon Explorer](https://explorer.muon.net) apps list and it should be string.
 
 2. methodName :
-This parameter must be the name of one of method of the app that is entered as the first parameter.
+   This parameter must be the name of one of method of the app that is entered as the first parameter.
 
 3. params :
-This parameter must be the params of the method that is entered as the second parameter and it should be an object.
+   This parameter must be the params of the method that is entered as the second parameter and it should be an object.
 
 ## Examples
 
