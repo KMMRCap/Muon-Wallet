@@ -26,7 +26,7 @@ const { priceHandler, exchageRateCalculator } = require('./utils/price')
 const Tokens = require('./utils/Tokens.json')
 const Apps = require('./utils/Apps.json')
 
-;('use strict')
+'use strict';
 
 // -------------------------------------------------
 // CONSTANTS
@@ -311,6 +311,7 @@ const handleCloseModal = (data, err) => {
 	$('#muon-wallet').addClass('closed')
 	setTimeout(() => {
 		$('#muon-wallet').remove()
+		$('body').css('overflowY', 'auto')
 		if (data) {
 			resolver(data)
 		} else {
@@ -629,7 +630,10 @@ const depositSectionHandler = () => {
 // ----------
 
 const handleOpenModal = () => {
+	const top = $(document).scrollTop()
+	$('body').css('overflowY', 'hidden')
 	$('body').append(modalLayout())
+	$('#muon-wallet').css('top',`${top}px`)
 	handleContent()
 }
 
