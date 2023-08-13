@@ -53,12 +53,12 @@
 /* Variables */
 :root {
   --mw-gradient: linear-gradient(
-    90.01deg,
-    #64a3f4 0%,
-    #7202f1 18.02%,
-    #a728da 41.61%,
-    #c5759e 82.53%,
-    #f09e5a 105.58%
+  	90.01deg,
+  	#64a3f4 0%,
+  	#7202f1 18.02%,
+  	#a728da 41.61%,
+  	#c5759e 82.53%,
+  	#f09e5a 105.58%
   );
   --mw-primary: #5158f6;
   --mw-primary-low: #cfd1f9;
@@ -150,6 +150,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 99999999999999;
 }
 #muon-wallet * {
   font-family: "MW_Lato" !important;
