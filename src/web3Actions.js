@@ -90,7 +90,10 @@ const getWalletBalance = async (web3, account) => {
  */
 
 const getDepositBalance = async (web3, account) => {
-	const contract = new web3.eth.Contract(Contracts.abi.MuonFeeUpgradeable, Contracts.address.MuonFeeUpgradeable)
+	const contract = new web3.eth.Contract(
+		Contracts.abi.MuonFeeUpgradeable,
+		Contracts.address.MuonFeeUpgradeable
+	)
 	const res = await contract.methods.users(account).call()
 	const balance = utils.fromWei(res, 'ether')
 	return balance
@@ -245,7 +248,10 @@ const approveDepositToken = async (web3, amount, account) => {
  */
 
 const depositToken = async (web3, amount, account) => {
-	const contract = new web3.eth.Contract(Contracts.abi.MuonFeeUpgradeable, Contracts.address.MuonFeeUpgradeable)
+	const contract = new web3.eth.Contract(
+		Contracts.abi.MuonFeeUpgradeable,
+		Contracts.address.MuonFeeUpgradeable
+	)
 	const convertedAmount = utils.toWei(amount, 'ether')
 	const res = await contract.methods.deposit(convertedAmount).send({ from: account })
 	return res
