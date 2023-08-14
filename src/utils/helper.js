@@ -16,4 +16,12 @@ const exchageRateCalculator = (amountIn, reserveIn, reserveOut) => {
 	return numerator / denominator
 }
 
-module.exports = { priceHandler, exchageRateCalculator }
+const paramsHandler = (params) => {
+	return params.map(i => {
+		let a = i[0]
+		let b = typeof i[1] !== 'object' ? String(i[1]) : JSON.stringify(i[1])
+		return `<span>${a}: ${b.length > 15 ? b.slice(0, 7) + '...' + b.slice(-7) : b}</span>`
+	}).join('')
+}
+
+module.exports = { priceHandler, exchageRateCalculator, paramsHandler }

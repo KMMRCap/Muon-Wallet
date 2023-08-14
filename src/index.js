@@ -21,10 +21,10 @@ const {
 	depositToken,
 	signAndRequest,
 } = require('./web3Actions')
-const { priceHandler, exchageRateCalculator } = require('./utils/price')
+const { priceHandler, exchageRateCalculator, paramsHandler } = require('./utils/helper')
 
-const Tokens = require('./utils/Tokens.json')
-const Apps = require('./utils/Apps.json')
+const Tokens = require('./data/Tokens.json')
+const Apps = require('./data/Apps.json')
 
 ;('use strict')
 
@@ -42,6 +42,7 @@ let rejecter = null
 let app = null
 let method = null
 let params = null
+let paramsToShow = []
 
 let web3Instance = null
 
@@ -69,241 +70,247 @@ let allowance = 0
 
 const modalLayout = () => {
 	return String.raw`
-        <div id="muon-wallet">
+        	<div id="muon-wallet">
             <div class="backdrop"></div>
             <div class="muon-modal">
 
-                <div class="muon-modal-header">
-                    <div class="logo">
-                        <span class='logo-image'></span>
-                        <div>
-                            <h5>${TOKEN_NAME}</h5>
-                            <h6>Wallet</h6>
-                        </div>
-                    </div>
-                    <button class='close'></button>
-                </div>
+               <div class="muon-modal-header">
+                  <div class="logo">
+                     <span class='logo-image'></span>
+                     <div>
+                        <h5>${TOKEN_NAME}</h5>
+                        <h6>Wallet</h6>
+                     </div>
+                  </div>
+                  <button class='close'></button>
+               </div>
 
-                <div class='account'>
-                    <div>
-                        <p>${accountAddress?.slice(0, 6) + '...' + accountAddress?.slice(-4)}</p>
-                        <span>Wallet balance: <span>${priceHandler(
-									walletBalance
-								)}</span> ${TOKEN_NAME}</span>
-                    </div>
-                </div>
+               <div class='account'>
+                  <div>
+                    	<p>${accountAddress?.slice(0, 6) + '...' + accountAddress?.slice(-4)}</p>
+                    	<span>Wallet balance: <span>
+								${priceHandler(walletBalance)}</span> ${TOKEN_NAME}
+							</span>
+                  </div>
+               </div>
 
-                <div class="muon-modal-body"></div>
+               <div class="muon-modal-body"></div>
             </div>
-        </div>
-    `
+        	</div>
+    	`
 }
 
 const signSection = () => {
 	return String.raw`
-        <section class='sign-section'>
+        	<section class='sign-section'>
             <div class='balance'>
-                <div></div>
-                <span>Deposited Balance :</span>
-                <h3>${priceHandler(depositBalance)} ${TOKEN_NAME}</h3>
+               <div></div>
+               <span>Deposited Balance :</span>
+               <h3>${priceHandler(depositBalance)} ${TOKEN_NAME}</h3>
             </div>
             <div class='actions'>
-                <div>
-                    <h5 class='bold'>${app}</h5>
-                </div>
-                <div>
-                    <h5>Method:</h5>
-                    <h5 class='bold'>${method}()</h5>
-                </div>
-                <div>
-                    <h5>Params:</h5>
-                    <h5 class='bold'>${params}</h5>
-                </div>
-                <div>
-                    <h5>Fee:</h5>
-                    <div>
-                        <h5 class='bold'>${fee} ${TOKEN_NAME}</h5>
-                        <h6>≈$${convertedFee}</h6>
-                    </div>
-                </div>
-                <div class='buttons'>
-                    <button class='cancel'>Reject</button>
-                    <button class='submit'>Approve</button>
-                </div>
+               <div>
+                  <h5 class='bold'>${app}</h5>
+               </div>
+               <div>
+                  <h5>Method:</h5>
+                  <h5 class='bold'>${method}()</h5>
+               </div>
+               <div>
+                  <h5>Params:</h5>
+                  <h5 class='bold'>
+					  		${paramsHandler(paramsToShow)}
+					  	</h5>
+               </div>
+               <div>
+                  <h5>Fee:</h5>
+                  <div>
+                     <h5 class='bold'>${fee} ${TOKEN_NAME}</h5>
+                     <h6>≈$${convertedFee}</h6>
+                  </div>
+               </div>
+               <div class='buttons'>
+                  <button class='cancel'>Reject</button>
+                  <button class='submit'>Approve</button>
+               </div>
             </div>
-        </section>
-    `
+        	</section>
+    	`
 }
 
 const outOfWalletBalanceSection = () => {
 	return String.raw`
-        <section class='out-of-wallet-balance-section'>
+        	<section class='out-of-wallet-balance-section'>
             <div class='balance'>
-                <div></div>
-                <span>Deposited Balance :</span>
-                <h3>${priceHandler(depositBalance)} ${TOKEN_NAME}</h3>
+               <div></div>
+               <span>Deposited Balance :</span>
+               <h3>${priceHandler(depositBalance)} ${TOKEN_NAME}</h3>
             </div>
             <div class='out-buttons'>
-                <button class='buy'>Buy</button>
+               <button class='buy'>Buy</button>
             </div>
             <div class='actions'>
-                <div>
-                    <h5 class='bold'>${app}</h5>
-                    <div class='insufficient'>
-                        <h5>Insufficient Balance</h5>
-                        <span></span>
-                    </div>
-                </div>
-                <div>
-                    <h5>Method:</h5>
-                    <h5 class='bold'>${method}()</h5>
-                </div>
-                <div>
-                    <h5>Params:</h5>
-                    <h5 class='bold'>${params}</h5>
-                </div>
-                <div>
-                    <h5>Fee:</h5>
-                    <div>
-                        <h5 class='bold'>${fee} ${TOKEN_NAME}</h5>
-                        <h6>≈$${convertedFee}</h6>
-                    </div>
-                </div>
-                <div class='buttons'>
-                    <button class='cancel'>Reject</button>
-                    <button class='submit' disabled>Approve</button>
-                </div>
+               <div>
+                  <h5 class='bold'>${app}</h5>
+                  <div class='insufficient'>
+                     <h5>Insufficient Balance</h5>
+                     <span></span>
+                  </div>
+               </div>
+               <div>
+                  <h5>Method:</h5>
+                  <h5 class='bold'>${method}()</h5>
+               </div>
+               <div>
+                  <h5>Params:</h5>
+                  <h5 class='bold'>
+					  		${paramsHandler(paramsToShow)}
+					  	</h5>
+               </div>
+               <div>
+                  <h5>Fee:</h5>
+                  <div>
+                     <h5 class='bold'>${fee} ${TOKEN_NAME}</h5>
+                     <h6>≈$${convertedFee}</h6>
+                  </div>
+               </div>
+               <div class='buttons'>
+                  <button class='cancel'>Reject</button>
+                  <button class='submit' disabled>Approve</button>
+               </div>
             </div>
-        </section>
-    `
+        	</section>
+    	`
 }
 
 const outOfDepositBalanceSection = () => {
 	return String.raw`
-        <section class='out-of-deposit-balance-section'>
+        	<section class='out-of-deposit-balance-section'>
             <div class='balance'>
-                <div></div>
-                <span>Deposited Balance :</span>
-                <h3>${priceHandler(depositBalance)} ${TOKEN_NAME}</h3>
+               <div></div>
+               <span>Deposited Balance :</span>
+               <h3>${priceHandler(depositBalance)} ${TOKEN_NAME}</h3>
             </div>
             <div class='out-buttons'>
-                <button class='deposit'>Deposit</button>
-                <button class='buy'>Buy</button>
+               <button class='deposit'>Deposit</button>
+               <button class='buy'>Buy</button>
             </div>
             <div class='actions'>
-                <div>
-                    <h5 class='bold'>${app}</h5>
-                    <div class='insufficient'>
-                        <h5>Insufficient Balance</h5>
-                        <span></span>
-                    </div>
-                </div>
-                <div>
-                    <h5>Method:</h5>
-                    <h5 class='bold'>${method}()</h5>
-                </div>
-                <div>
-                    <h5>Params:</h5>
-                    <h5 class='bold'>${params}</h5>
-                </div>
-                <div>
-                    <h5>Fee:</h5>
-                    <div>
-                        <h5 class='bold'>${fee} ${TOKEN_NAME}</h5>
-                        <h6>≈$${convertedFee}</h6>
-                    </div>
-                </div>
-                <div class='buttons'>
-                    <button class='cancel'>Reject</button>
-                    <button class='submit' disabled>Approve</button>
-                </div>
+               <div>
+                  <h5 class='bold'>${app}</h5>
+                  <div class='insufficient'>
+                     <h5>Insufficient Balance</h5>
+                     <span></span>
+                  </div>
+               </div>
+               <div>
+                  <h5>Method:</h5>
+                  <h5 class='bold'>${method}()</h5>
+               </div>
+               <div>
+                  <h5>Params:</h5>
+                  <h5 class='bold'>
+					  		${paramsHandler(paramsToShow)}
+					  	</h5>
+               </div>
+               <div>
+                  <h5>Fee:</h5>
+                  <div>
+                     <h5 class='bold'>${fee} ${TOKEN_NAME}</h5>
+                     <h6>≈$${convertedFee}</h6>
+                  </div>
+               </div>
+               <div class='buttons'>
+                  <button class='cancel'>Reject</button>
+                  <button class='submit' disabled>Approve</button>
+               </div>
             </div>
-        </section>
-    `
+        	</section>
+    	`
 }
 
 const buySection = () => {
 	return String.raw`
-        <section class='buy-section'>
+        	<section class='buy-section'>
             <div class='balance-cont'>
-                <div class='logo'></div>
-                <div class='balance'>
-                    <span>Deposited Balance:</span>
-                    <h6>${priceHandler(depositBalance)} ${TOKEN_NAME}</h6>
-                </div>
+               <div class='logo'></div>
+               <div class='balance'>
+                  <span>Deposited Balance:</span>
+                  <h6>${priceHandler(depositBalance)} ${TOKEN_NAME}</h6>
+               </div>
             </div>
             <div class='swap-actions'>
-                <div class='title'>
-                    <h5>Buy ${TOKEN_NAME}</h5>
-                </div>
-                <div class='swap-box'>
-                    <div class='from'>
-                        <input type='number' value='0.00' placeholder='0.00' />
-                        <div class='data'>
-                            <h6>Balance: <span>0</span></h6>
-                            <button>
-                                <span></span>
-                                <h5>${selectedToken?.name || Tokens[1].name}</h5>
-                                <ul class='tokens-list'></ul>
-                            </button>
-                            <div class='logo'></div>
-                        </div>
-                    </div>
-                    <div class='to'>
-                        <span class='converted'>0.00</span>
-                        <div class='data'>
-                            <h6>Balance: ${priceHandler(walletBalance)}</h6>
-                            <h5>${TOKEN_NAME}</h5>
-                            <div class='logo'></div>
-                        </div>
-                    </div>
-                </div>
-                <div class='allowance'>
-                    <h6>Allowance: <span>${priceHandler(swapAllowance)}</span> <span>${
-								selectedToken?.name || Tokens[1].name
-							}</span></h6>
-                </div>
-                <!-- <div class='checkbox'>
-                    <input type="checkbox" name="checkbox" id='check-buy-and-deposit' />
-                    <label for='check-buy-and-deposit'>Buy and Deposit to Account</label>
-                </div> -->
-                <button class='buy-and-deposit'>Buy</button>
+               <div class='title'>
+                  <h5>Buy ${TOKEN_NAME}</h5>
+               </div>
+               <div class='swap-box'>
+                  <div class='from'>
+                     <input type='number' value='0.00' placeholder='0.00' />
+                     <div class='data'>
+                        <h6>Balance: <span>0</span></h6>
+                        <button>
+                           <span></span>
+                           <h5>${selectedToken?.name || Tokens[1].name}</h5>
+                           <ul class='tokens-list'></ul>
+                        </button>
+                        <div class='logo'></div>
+                     </div>
+                  </div>
+                  <div class='to'>
+                     <span class='converted'>0.00</span>
+                     <div class='data'>
+                        <h6>Balance: ${priceHandler(walletBalance)}</h6>
+                        <h5>${TOKEN_NAME}</h5>
+                        <div class='logo'></div>
+                     </div>
+                  </div>
+               </div>
+               <div class='allowance'>
+                  <h6>Allowance: <span>
+						  	${priceHandler(swapAllowance)}</span> <span>${selectedToken?.name || Tokens[1].name}</span>
+						</h6>
+               </div>
+               <!-- <div class='checkbox'>
+                  <input type="checkbox" name="checkbox" id='check-buy-and-deposit' />
+                  <label for='check-buy-and-deposit'>Buy and Deposit to Account</label>
+               </div> -->
+               <button class='buy-and-deposit'>Buy</button>
             </div>
-        </section>
-    `
+        	</section>
+    	`
 }
 
 const depositSection = () => {
 	return String.raw`
-        <section class='buy-section deposit'>
-        <div class='balance-cont'>
-                <div class='logo'></div>
-                <div class='balance'>
-                    <span>Deposited Balance:</span>
-                    <h6>${priceHandler(depositBalance)} ${TOKEN_NAME}</h6>
-                </div>
+        	<section class='buy-section deposit'>
+        		<div class='balance-cont'>
+               <div class='logo'></div>
+               <div class='balance'>
+                  <span>Deposited Balance:</span>
+                  <h6>${priceHandler(depositBalance)} ${TOKEN_NAME}</h6>
+               </div>
             </div>
             <div class='swap-actions'>
-                <div class='title'>
-                    <h5>Deposit ${TOKEN_NAME}</h5>
-                </div>
-                <div class='swap-box'>
-                    <div class='to'>
-                        <input type='number' value='0.00' placeholder='0.00' />
-                        <div class='data'>
-                            <h6>Balance: ${priceHandler(walletBalance)}</h6>
-                            <h5>${TOKEN_NAME}</h5>
-                            <div class='logo'></div>
-                        </div>
-                    </div>
-                    <div class='allowance'>
-                        <h6>Allowance: <span>${priceHandler(allowance)}</span> ${TOKEN_NAME}</h6>
-                    </div>
-                </div>
-                <button class='deposit'>Approve Deposit</button>
+               <div class='title'>
+                  <h5>Deposit ${TOKEN_NAME}</h5>
+               </div>
+               <div class='swap-box'>
+                  <div class='to'>
+                     <input type='number' value='0.00' placeholder='0.00' />
+                     <div class='data'>
+                        <h6>Balance: ${priceHandler(walletBalance)}</h6>
+                        <h5>${TOKEN_NAME}</h5>
+                        <div class='logo'></div>
+                     </div>
+                  </div>
+                  <div class='allowance'>
+                     <h6>Allowance: <span>${priceHandler(allowance)}</span> ${TOKEN_NAME}</h6>
+                  </div>
+               </div>
+               <button class='deposit'>Approve Deposit</button>
             </div>
-        </section>
-    `
+        	</section>
+    	`
 }
 
 // -------------------------------------------------
@@ -712,6 +719,7 @@ const request = (appName, methodName, parameters) => {
 			app = appName.toLowerCase()
 			method = methodName.toLowerCase()
 			params = JSON.stringify(parameters)
+			paramsToShow = Object.entries(parameters)
 
 			const provider = await detectProvider()
 			web3Instance = new Web3(provider)

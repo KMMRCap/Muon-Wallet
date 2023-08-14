@@ -15,9 +15,15 @@
 					font-size: 12px;
 					color: var(--mw-t2);
 					font-weight: normal;
+					max-width: 15rem;
+					display: flex;
+					flex-direction: column;
 					&.bold {
 						font-weight: bold;
 						color: var(--mw-t1);
+					}
+					span:not(:last-child){
+						margin-bottom: 5px;
 					}
 				}
 				div {

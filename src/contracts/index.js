@@ -6,10 +6,10 @@ const Contracts = {
 		Pair: '0x17CDD4542E47a9faE68c46A25BA85b13dF960E94',
 	},
 	abi: {
-		MuonFeeUpgradeable: require('./abi/MuonFeeUpgradeable.json'),
-		Token: require('./abi/Token.json'),
-		SmartRouter: require('./abi/SmartRouter.json'),
-		Pair: require('./abi/Pair.json'),
+		MuonFeeUpgradeable: require('./MuonFeeUpgradeable.json'),
+		Token: require('./Token.json'),
+		SmartRouter: require('./SmartRouter.json'),
+		Pair: require('./Pair.json'),
 	},
 }
 

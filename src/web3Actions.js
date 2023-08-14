@@ -1,7 +1,7 @@
 const detectEthereumProvider = require('@metamask/detect-provider')
 const { utils, Web3 } = require('web3')
-const { Contracts } = require('./utils/contracts')
-const Apps = require('./utils/Apps.json')
+const { Contracts } = require('./contracts')
+const Apps = require('./data/Apps.json')
 
 // ==========================================================================
 // REQUIRED CHECKS TO OPEN MODAL
