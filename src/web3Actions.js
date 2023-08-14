@@ -302,7 +302,7 @@ const signAndRequest = async (web3, account, app, method, params) => {
 		paramsToConcat = paramsToConcat.concat(`&params[${item[0]}]=${item[1]}`)
 	})
 
-	const url = `http://139.59.101.131:8080/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`
+	const url = `https://alice.muon.net/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`
 
 	const res = await fetch(url, {
 		method: 'GET',
