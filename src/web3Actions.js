@@ -289,12 +289,12 @@ const signAndRequest = async (web3, account, app, method, params) => {
 	}
 	const dataToSign = JSON.stringify(eip712TypedData)
 
-	const signature = await web3.currentProvider.request({
-		id: Math.floor(Date.now() / 1000),
-		jsonrpc: '2.0',
-		method: 'eth_signTypedData_v4',
-		params: [account, dataToSign],
-	})
+	// const signature = await web3.currentProvider.request({
+	// 	id: Math.floor(Date.now() / 1000),
+	// 	jsonrpc: '2.0',
+	// 	method: 'eth_signTypedData_v4',
+	// 	params: [account, dataToSign],
+	// })
 
 	const paramsObject = JSON.parse(params)
 	let paramsToConcat = ''
@@ -302,7 +302,7 @@ const signAndRequest = async (web3, account, app, method, params) => {
 		paramsToConcat = paramsToConcat.concat(`&params[${item[0]}]=${item[1]}`)
 	})
 
-	const url = `https://alice.muon.net/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`
+	const url = `https://explorer.muon.net/query/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}`
 
 	const res = await fetch(url, {
 		method: 'GET',
