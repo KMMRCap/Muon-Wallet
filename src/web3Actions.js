@@ -262,6 +262,7 @@ const depositToken = async (web3, amount, account) => {
 // ==========================================================================
 
 /**
+ * @param {string} baseUrl The base url for request
  * @param {Web3} web3 The Web3.js instance
  * @param {string} account The account address string
  * @param {string} app The app name
@@ -270,7 +271,7 @@ const depositToken = async (web3, amount, account) => {
  * @returns {Promise<any>} Returns swap response
  */
 
-const signAndRequest = async (web3, account, app, method, params) => {
+const signAndRequest = async (baseUrl, web3, account, app, method, params) => {
 	const timestamp = Math.floor(Date.now())
 	const appId = Apps.find((i) => i.name === app).id
 

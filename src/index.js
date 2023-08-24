@@ -26,7 +26,7 @@ const { priceHandler, exchageRateCalculator, paramsHandler } = require('./utils/
 const Tokens = require('./data/Tokens.json')
 const Apps = require('./data/Apps.json')
 
-;('use strict')
+	; ('use strict')
 
 // -------------------------------------------------
 // CONSTANTS
@@ -35,6 +35,8 @@ const TOKEN_NAME = 'ALICE'
 
 // -------------------------------------------------
 // Variables
+
+let baseUrl = ''
 
 let resolver = null
 let rejecter = null
@@ -245,7 +247,7 @@ const buySection = () => {
                </div>
                <div class='swap-box'>
                   <div class='from'>
-                     <input type='number' value='0.00' placeholder='0.00' />
+                     <input type='number' value='0.00' placeholder='0.00' min='0' />
                      <div class='data'>
                         <h6>Balance: <span>0</span></h6>
                         <button>
@@ -296,7 +298,7 @@ const depositSection = () => {
                </div>
                <div class='swap-box'>
                   <div class='to'>
-                     <input type='number' value='0.00' placeholder='0.00' />
+                     <input type='number' value='0.00' placeholder='0.00' min='0' />
                      <div class='data'>
                         <h6>Balance: ${priceHandler(walletBalance)}</h6>
                         <h5>${TOKEN_NAME}</h5>
@@ -354,7 +356,7 @@ const signSectionHandler = () => {
 	$(button).on('click', async () => {
 		try {
 			handleLoadingButton(button, true)
-			const data = await signAndRequest(web3Instance, accountAddress, app, method, params)
+			const data = await signAndRequest(baseUrl, web3Instance, accountAddress, app, method, params)
 			handleLoadingButton(button, false)
 			handleCloseModal(data)
 		} catch (err) {
@@ -466,6 +468,7 @@ const buySectionHandler = () => {
 			$(logo).removeClass(i.icon)
 		})
 		$(logo).addClass(selectedToken.icon)
+		$(selectboxText).text(selectedToken?.name)
 
 		await handleCheckSwapAllowance()
 
@@ -604,7 +607,7 @@ const depositSectionHandler = () => {
 		if (!depositInputValue) {
 			$(inputbox).css('border', 'none')
 			handleDisableButton(button, true)
-		} else if (depositInputValue > walletBalance) {
+		} else if (depositInputValue > walletBalance || depositInputValue < 0) {
 			$(inputbox).css('border', '1px solid red')
 			handleDisableButton(button, true)
 		} else {
@@ -626,6 +629,10 @@ const depositSectionHandler = () => {
 		}
 		if (!depositInputValue) {
 			console.error('Deposit Value is 0')
+			return
+		}
+		if (depositInputValue < 0) {
+			console.error('Deposit Value is less than 0')
 			return
 		}
 		try {
@@ -688,61 +695,78 @@ const handleLoadingButton = (elem, status) => {
 }
 
 // -------------------------------------------------
-// Modal Wallet Request
+// Muon Class
 
 /**
- * @param {string} appName The name of the app
- * @param {string} methodName The method name of the app
- * @param {object} parameters The parameters of the method of the app
- * @returns {Promise<any>}
- */
+ * @class The Muon Class
+*/
 
-const request = (appName, methodName, parameters) => {
-	if (!appName || !methodName || !parameters || typeof parameters !== 'object') {
-		console.error('All parameters should be present')
-		return
+class Muon {
+
+	/**
+	 * Creates baseUrl for the request
+	 * @param {string} link The baseUrl for the request
+	*/
+
+	constructor(link) {
+		baseUrl = link || 'https://explorer.muon.net/query/v1'
 	}
-	const promise = new Promise(async (resolve, reject) => {
-		resolver = resolve
-		rejecter = reject
 
-		try {
-			const appFound = Apps.find((i) => i.name === appName.toLowerCase())
-			if (!appFound) {
-				throw 'App not found'
-			} else {
-				const methodFound = appFound.methods.find((i) => i === methodName.toLowerCase())
-				if (!methodFound) {
-					throw 'Method not found'
-				}
-			}
-			app = appName.toLowerCase()
-			method = methodName.toLowerCase()
-			params = JSON.stringify(parameters)
-			paramsToShow = Object.entries(parameters)
+	/**
+	 * Handles requests for opening muon wallet modal
+	 * @param {string} appName The name of the app
+	 * @param {string} methodName The method name of the app
+	 * @param {object} parameters The parameters of the method of the app
+	 * @returns {Promise<any>} The result of the request
+	*/
 
-			const provider = await detectProvider()
-			web3Instance = new Web3(provider)
-
-			checkWalletConnection()
-			await checkActiveChainId(web3Instance)
-			detectAccountAndChainChange(handleCloseModal)
-
-			accountAddress = await getSelectedAccount(web3Instance)
-			const res1 = getWalletBalance(web3Instance, accountAddress)
-			const res2 = getDepositBalance(web3Instance, accountAddress)
-			const res3 = getUsedDepositedBalance(accountAddress)
-			const allRes = await Promise.all([res1, res2, res3])
-			walletBalance = Number(allRes[0])
-			depositBalance = Number(allRes[1]) - Number(allRes[2])
-
-			handleOpenModal()
-		} catch (err) {
-			rejecter(err)
-			removeEventListeners()
+	request = (appName, methodName, parameters) => {
+		if (!appName || !methodName || !parameters || typeof parameters !== 'object') {
+			console.error('All parameters should be present')
+			return
 		}
-	})
-	return promise
+		const promise = new Promise(async (resolve, reject) => {
+			resolver = resolve
+			rejecter = reject
+
+			try {
+				const appFound = Apps.find((i) => i.name === appName.toLowerCase())
+				if (!appFound) {
+					throw 'App not found'
+				} else {
+					const methodFound = appFound.methods.find((i) => i === methodName.toLowerCase())
+					if (!methodFound) {
+						throw 'Method not found'
+					}
+				}
+				app = appName.toLowerCase()
+				method = methodName.toLowerCase()
+				params = JSON.stringify(parameters)
+				paramsToShow = Object.entries(parameters)
+
+				const provider = await detectProvider()
+				web3Instance = new Web3(provider)
+
+				checkWalletConnection()
+				await checkActiveChainId(web3Instance)
+				detectAccountAndChainChange(handleCloseModal)
+
+				accountAddress = await getSelectedAccount(web3Instance)
+				const res1 = getWalletBalance(web3Instance, accountAddress)
+				const res2 = getDepositBalance(web3Instance, accountAddress)
+				const res3 = getUsedDepositedBalance(accountAddress)
+				const allRes = await Promise.all([res1, res2, res3])
+				walletBalance = Number(allRes[0])
+				depositBalance = Number(allRes[1]) - Number(allRes[2])
+
+				handleOpenModal()
+			} catch (err) {
+				rejecter(err)
+				removeEventListeners()
+			}
+		})
+		return promise
+	}
 }
 
-module.exports = { request }
+module.exports = { Muon }
