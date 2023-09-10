@@ -27,7 +27,7 @@ const { priceHandler, exchageRateCalculator, paramsHandler } = require('./utils/
 const Tokens = require('./data/Tokens.json')
 const Apps = require('./data/Apps.json')
 
-	; ('use strict')
+;('use strict')
 
 // -------------------------------------------------
 // CONSTANTS
@@ -567,9 +567,10 @@ const buySectionHandler = () => {
 		} else {
 			$(button).text(
 				swapInputValue > swapAllowance
-					? 'Approve' : allowBuyAndDeposit
-						? 'Buy & Deposit'
-						: 'Buy'
+					? 'Approve'
+					: allowBuyAndDeposit
+					? 'Buy & Deposit'
+					: 'Buy'
 			)
 		}
 	})
