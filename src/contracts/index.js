@@ -4,12 +4,14 @@ const Contracts = {
 		Token: '0xF43CD517385237fe7A48927073151D12f4eADC53',
 		SmartRouter: '0x9a489505a00cE272eAa5e07Dba6491314CaE3796',
 		Pair: '0xb82ce77fe7ba7253f133b7b6935df0545e33dbb9',
+		Swapper: '0xCC339D773f1Bd23109063C43E267FbD4b988feFB',
 	},
 	abi: {
 		MuonFeeUpgradeable: require('./abi/MuonFeeUpgradeable.json'),
 		Token: require('./abi/Token.json'),
 		SmartRouter: require('./abi/SmartRouter.json'),
 		Pair: require('./abi/Pair.json'),
+		Swapper: require('./abi/Swapper.json'),
 	},
 }
 
@@ -30,3 +32,6 @@ module.exports = { Contracts }
 
 // Pair :
 // R: getReserves()
+
+// Swapper :
+// W: swapAndDeposit() - swapAndDepositErc20(amount)

@@ -16,6 +16,7 @@ const {
 	approveSwapTokens,
 	getPairExchangeRates,
 	swapTokens,
+	swapAndDeposit,
 	checkDepositAllowance,
 	approveDepositToken,
 	depositToken,
@@ -62,7 +63,7 @@ let rate1 = 0
 let rate2 = 0
 let swapInputValue = 0
 let swapAllowance = 0
-// let allowBuyAndDeposit = false
+let allowBuyAndDeposit = false
 
 let depositInputValue = 0
 let allowance = 0
@@ -272,10 +273,10 @@ const buySection = () => {
 						  	${priceHandler(swapAllowance)}</span> <span>${selectedToken?.name || Tokens[1].name}</span>
 						</h6>
                </div>
-               <!-- <div class='checkbox'>
+               <div class='checkbox'>
                   <input type="checkbox" name="checkbox" id='check-buy-and-deposit' />
                   <label for='check-buy-and-deposit'>Buy and Deposit to Account</label>
-               </div> -->
+               </div>
                <button class='buy-and-deposit'>Buy</button>
             </div>
         	</section>
@@ -356,7 +357,14 @@ const signSectionHandler = () => {
 	$(button).on('click', async () => {
 		try {
 			handleLoadingButton(button, true)
-			const data = await signAndRequest(baseUrl, web3Instance, accountAddress, app, method, params)
+			const data = await signAndRequest(
+				baseUrl,
+				web3Instance,
+				accountAddress,
+				app,
+				method,
+				params
+			)
 			handleLoadingButton(button, false)
 			handleCloseModal(data)
 		} catch (err) {
@@ -415,7 +423,7 @@ const buySectionHandler = () => {
 	const allowanceToken = $(
 		'#muon-wallet .muon-modal-body .swap-actions .allowance h6 span:last-child'
 	)
-	// const checkbox = $('#muon-wallet .muon-modal-body .swap-actions .checkbox input')
+	const checkbox = $('#muon-wallet .muon-modal-body .swap-actions .checkbox input')
 
 	Tokens.forEach((i) => {
 		$(dropdown).append(`<li>${i.name}</li>`)
@@ -426,8 +434,8 @@ const buySectionHandler = () => {
 	selectedToken = selectedToken || Tokens[0]
 	$(selectboxText).text(selectedToken?.name)
 	$(input).val(swapInputValue)
-	// $(checkbox).val(allowBuyAndDeposit)
-	// $(button).text(allowBuyAndDeposit ? 'Buy & Deposit' : 'Buy')
+	$(checkbox).val(allowBuyAndDeposit)
+	$(button).text(allowBuyAndDeposit ? 'Buy & Deposit' : 'Buy')
 
 	$(selectboxButton).on('click', (e) => {
 		$(dropdown).toggle()
@@ -435,12 +443,12 @@ const buySectionHandler = () => {
 
 	const handleButtonOnAllowance = (value) => {
 		if (selectedToken.address === '0x0') {
-			$(button).text('Buy')
+			$(button).text(allowBuyAndDeposit ? 'Buy & Deposit' : 'Buy')
 		} else {
 			if (value > swapAllowance) {
 				$(button).text('Approve')
 			} else {
-				$(button).text('Buy')
+				$(button).text(allowBuyAndDeposit ? 'Buy & Deposit' : 'Buy')
 			}
 		}
 	}
@@ -453,7 +461,8 @@ const buySectionHandler = () => {
 			const value = await checkSelectedTokenAllowance(
 				web3Instance,
 				selectedToken.address,
-				accountAddress
+				accountAddress,
+				allowBuyAndDeposit
 			)
 			swapAllowance = Number(value)
 			$(allowanceValue).text(priceHandler(swapAllowance))
@@ -532,11 +541,25 @@ const buySectionHandler = () => {
 		}, 1500)
 	})
 
-	// $(checkbox).on('change', (e) => {
-	//     $(e).val(!allowBuyAndDeposit)
-	//     allowBuyAndDeposit = !allowBuyAndDeposit
-	//     $(button).text(allowBuyAndDeposit ? 'Buy & Deposit' : 'Buy')
-	// })
+	$(checkbox).on('change', async (e) => {
+		$(e).val(!allowBuyAndDeposit)
+		allowBuyAndDeposit = !allowBuyAndDeposit
+
+		handleLoadingButton(button, true)
+		await handleCheckSwapAllowance()
+		handleLoadingButton(button, false)
+
+		if (selectedToken.address === '0x0') {
+			$(button).text(allowBuyAndDeposit ? 'Buy & Deposit' : 'Buy')
+		} else {
+			$(button).text(
+				swapInputValue > swapAllowance
+					? 'Approve' : allowBuyAndDeposit
+						? 'Buy & Deposit'
+						: 'Buy'
+			)
+		}
+	})
 
 	$(button).on('click', async () => {
 		if (!selectedToken?.name || !swapInputValue || !rate1 || !rate2) {
@@ -550,21 +573,39 @@ const buySectionHandler = () => {
 					web3Instance,
 					selectedToken.address,
 					swapInputValue,
-					accountAddress
+					accountAddress,
+					allowBuyAndDeposit
 				)
 				await handleCheckSwapAllowance()
 				handleButtonOnAllowance()
 				handleLoadingButton(button, false)
 			} else {
-				handleLoadingButton(button, true)
-				await swapTokens(web3Instance, swapInputValue, accountAddress, selectedToken)
+				if (allowBuyAndDeposit) {
+					handleLoadingButton(button, true)
+					await swapAndDeposit(web3Instance, swapInputValue, selectedToken, accountAddress)
 
-				const balance = await getWalletBalance(web3Instance, accountAddress)
-				walletBalance = Number(balance)
-				$('#muon-wallet .account span span').text(priceHandler(walletBalance))
-				handleLoadingButton(button, false)
+					const res1 = getDepositBalance(web3Instance, accountAddress)
+					const res2 = getUsedDepositedBalance(accountAddress)
+					const allRes = await Promise.all([res1, res2])
+					depositBalance = Number(allRes[0]) - Number(allRes[1])
+					handleLoadingButton(button, false)
 
-				outOfDepositBalanceSectionHandler()
+					if (depositBalance >= fee) {
+						signSectionHandler()
+					} else {
+						outOfDepositBalanceSectionHandler()
+					}
+				} else {
+					handleLoadingButton(button, true)
+					await swapTokens(web3Instance, swapInputValue, accountAddress, selectedToken)
+
+					const balance = await getWalletBalance(web3Instance, accountAddress)
+					walletBalance = Number(balance)
+					$('#muon-wallet .account span span').text(priceHandler(walletBalance))
+					handleLoadingButton(button, false)
+
+					outOfDepositBalanceSectionHandler()
+				}
 			}
 		} catch (err) {
 			console.error(err)
@@ -640,8 +681,10 @@ const depositSectionHandler = () => {
 				handleLoadingButton(button, true)
 				await depositToken(web3Instance, depositInputValue, accountAddress)
 
-				const balance = await getDepositBalance(web3Instance, accountAddress)
-				depositBalance = Number(balance)
+				const res1 = getDepositBalance(web3Instance, accountAddress)
+				const res2 = getUsedDepositedBalance(accountAddress)
+				const allRes = await Promise.all([res1, res2])
+				depositBalance = Number(allRes[0]) - Number(allRes[1])
 				handleLoadingButton(button, false)
 
 				if (depositBalance >= fee) {
@@ -699,14 +742,13 @@ const handleLoadingButton = (elem, status) => {
 
 /**
  * @class The Muon Class
-*/
+ */
 
 class Muon {
-
 	/**
 	 * Creates baseUrl for the request
 	 * @param {string} link The baseUrl for the request
-	*/
+	 */
 
 	constructor(link) {
 		baseUrl = link || 'https://explorer.muon.net/query/v1'
@@ -718,7 +760,7 @@ class Muon {
 	 * @param {string} methodName The method name of the app
 	 * @param {object} parameters The parameters of the method of the app
 	 * @returns {Promise<any>} The result of the request
-	*/
+	 */
 
 	request = (appName, methodName, parameters) => {
 		if (!appName || !methodName || !parameters || typeof parameters !== 'object') {

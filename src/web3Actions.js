@@ -161,12 +161,13 @@ const getPairExchangeRates = async (web3, token) => {
  * @param {Web3} web3 The Web3.js instance
  * @param {string} address The token address to check allowance
  * @param {string} account The account address string
+ * @param {boolean} swapAndDeposit If it is swap and deposit
  * @returns {Promise<number>} Returns allowance
  */
 
-const checkSelectedTokenAllowance = async (web3, address, account) => {
+const checkSelectedTokenAllowance = async (web3, address, account, swapAndDeposit) => {
 	const contract = new web3.eth.Contract(Contracts.abi.Token, address)
-	const spender = Contracts.address.SmartRouter
+	const spender = swapAndDeposit ? Contracts.address.Swapper : Contracts.address.SmartRouter
 	const res = await contract.methods.allowance(account, spender).call()
 	const allowance = utils.fromWei(res, 'ether')
 	return allowance
@@ -177,12 +178,13 @@ const checkSelectedTokenAllowance = async (web3, address, account) => {
  * @param {string} address The token address to approve
  * @param {number} amount The amount to deposit
  * @param {string} account The account address string
+ * @param {boolean} swapAndDeposit If it is swap and deposit
  * @returns {Promise<any>} Returns deposit response
  */
 
-const approveSwapTokens = async (web3, address, amount, account) => {
+const approveSwapTokens = async (web3, address, amount, account, swapAndDeposit) => {
 	const contract = new web3.eth.Contract(Contracts.abi.Token, address)
-	const spender = Contracts.address.SmartRouter
+	const spender = swapAndDeposit ? Contracts.address.Swapper : Contracts.address.SmartRouter
 	const convertedAmount = utils.toWei(amount, 'ether')
 	const res = await contract.methods.approve(spender, convertedAmount).send({ from: account })
 	return res
@@ -204,6 +206,23 @@ const swapTokens = async (web3, valueToPay, account, token) => {
 	const res = await contract.methods
 		.swapExactTokensForTokens(amountIn, amountOutMin, path, account)
 		.send({ from: account, value: token.address !== '0x0' ? 0 : amountIn })
+	return res
+}
+
+/**
+ * @param {Web3} web3 The Web3.js instance
+ * @param {number} amount The amount to swap and deposit
+ * @param {object} token The selected token object
+ * @param {string} account The account address string
+ * @returns {Promise<any>} Returns swap and deposit response
+ */
+
+const swapAndDeposit = async (web3, amount, token, account) => {
+	const contract = new web3.eth.Contract(Contracts.abi.Swapper, Contracts.address.Swapper)
+	const convertedAmount = utils.toWei(amount, 'ether')
+	const res = await contract.methods[token.SADMethod](
+		token.SADRequireValue ? '' : convertedAmount
+	).send({ from: account, value: token.SADRequireValue ? convertedAmount : 0 })
 	return res
 }
 
@@ -330,6 +349,7 @@ module.exports = {
 	checkSelectedTokenAllowance,
 	approveSwapTokens,
 	swapTokens,
+	swapAndDeposit,
 
 	checkDepositAllowance,
 	approveDepositToken,
