@@ -330,7 +330,20 @@ const handleCloseModal = (data, err) => {
 			rejecter(err || 'Modal closed without any result')
 			removeEventListeners()
 		}
+		handleClearVariables()
 	}, 700)
+}
+
+const handleClearVariables = () => {
+	selectedToken = null
+	selectedTokenBalance = 0
+	rate1 = 0
+	rate2 = 0
+	swapInputValue = 0
+	swapAllowance = 0
+	allowBuyAndDeposit = false
+	depositInputValue = 0
+	allowance = 0
 }
 
 const handleCloseButtons = () => {
