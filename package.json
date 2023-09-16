@@ -1,6 +1,6 @@
 {
 	"name": "muon-wallet",
-	"version": "1.28.1",
+	"version": "1.28.2",
 	"description": "Muon wallet package",
 	"main": "./src/index.js",
 	"types": "./src/index.d.ts",
