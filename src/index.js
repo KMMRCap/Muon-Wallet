@@ -765,7 +765,7 @@ class Muon {
 	 */
 
 	constructor(link) {
-		baseUrl = link || 'https://explorer.muon.net/query/v1'
+		baseUrl = link || 'https://explorer.muon.net/alice/query/v1'
 	}
 
 	/**

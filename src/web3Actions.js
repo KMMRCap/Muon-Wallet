@@ -322,7 +322,7 @@ const signAndRequest = async (baseUrl, web3, account, app, method, params) => {
 		paramsToConcat = paramsToConcat.concat(`&params[${item[0]}]=${item[1]}`)
 	})
 
-	const url = `https://explorer.muon.net/query/v1?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`
+	const url = `${baseUrl}?app=${app}&method=${method}${paramsToConcat}&fee[spender]=${account}&fee[timestamp]=${timestamp}&fee[signature]=${signature}`
 
 	const res = await fetch(url, {
 		method: 'GET',
